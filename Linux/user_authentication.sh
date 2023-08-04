@@ -11,7 +11,6 @@ get_login_credentials() {
     return 0
 }
 
-
 # Function to generate a salted hash of the password
 hash_password() {
     local salt=$(openssl rand -hex 8)
@@ -23,14 +22,50 @@ hash_password() {
 register_credentials() {
     # Insert code to register add the created user to a file called credentials.txt
     # Write your code here
+    role=""
+    # check that parameter one is not empty
+    if [[ -z "$1" ]]; then
+        role="customer"
+    else
+        role="$1"
+    fi
     read -p "Enter name: " name
     read -p "Enter username: " user
     read -sp "Enter password: " pass
     read -sp "Confirm password: " confirm_pass
-    local user_id=$(generte_user_id)
-    local hashed_pass=$(hash_password "$pass")
-    local 
-    echo -e "Registration successful. You can now log in.\n"
+    local line=$(grep "^$user2:" "$credentials_file")
+    if [[ -n "$line" ]]; then
+        echo -e "The username already exists. Please try again with a different username.\n"
+        return 1
+    fi
+    if [[ "$pass" != "$confirm_pass" ]]; then
+        echo -e "\nPasswords do not match. Please try again.\n"
+        echo "1. Retry"
+        echo "2. Exit"
+        echo -n "Enter your choice: "
+        read choice
+        case $choice in
+        1)
+            register_credentials
+            ;;
+        2)
+            exit 0
+            ;;
+        *)
+            echo "Invalid choice. Exiting the application..."
+            exit 1
+            ;;
+        esac
+    else
+        echo -e "\n"
+
+        local user_id=$(generte_user_id)
+        local pass=$(hash_password "$pass")
+        local hashed_pass=$(echo "$pass" | cut -d ':' -f 1)
+        local salt=$(echo "$pass" | cut -d ':' -f 2)
+        echo -e "Registration successful. You can now log in.\n"
+        echo -e "$user:$hashed_pass:$salt:$name:$role:0:$user_id" >>"$credentials_file"
+    fi
 }
 
 generte_user_id() {
@@ -151,7 +186,6 @@ while true; do
         verify_credentials "$user" "$pass"
         ;;
     2)
-        get_create_acctcred
         register_credentials
         ;;
     3)
