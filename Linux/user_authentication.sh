@@ -20,9 +20,7 @@ hash_password() {
 
 # Function to register new credentials
 register_credentials() {
-    # Insert code to register add the created user to a file called credentials.txt
-    # Write your code here
-    role=""
+    local role=""
     # check that parameter one is not empty
     if [[ -z "$1" ]]; then
         role="customer"
