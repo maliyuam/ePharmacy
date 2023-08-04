@@ -11,10 +11,6 @@ get_login_credentials() {
     return 0
 }
 
-# Function to prompt for credentials
-get_create_acctcred() {
-    return 0
-}
 
 # Function to generate a salted hash of the password
 hash_password() {
@@ -27,7 +23,20 @@ hash_password() {
 register_credentials() {
     # Insert code to register add the created user to a file called credentials.txt
     # Write your code here
+    read -p "Enter name: " name
+    read -p "Enter username: " user
+    read -sp "Enter password: " pass
+    read -sp "Confirm password: " confirm_pass
+    local user_id=$(generte_user_id)
+    local hashed_pass=$(hash_password "$pass")
+    local 
     echo -e "Registration successful. You can now log in.\n"
+}
+
+generte_user_id() {
+    generated_id=$(date +%Y%m%d%H%M%S%N)-$$
+    echo "$generated_id "
+    return 0
 }
 
 # Function to verify credentials and privileges
@@ -124,8 +133,7 @@ pharmasist_menu() {
 main_menu() {
     echo "1. Login"
     echo "2. Register"
-    echo "3. Logout"
-    echo "4. Exit"
+    echo "3. Exit"
     echo -n "Enter your choice: "
 
 }
@@ -147,9 +155,6 @@ while true; do
         register_credentials
         ;;
     3)
-        logout_user
-        ;;
-    4)
         echo "Exiting the application "
         exit 0
         ;;
