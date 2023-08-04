@@ -5,12 +5,9 @@ credentials_path="data"
 
 # Function to prompt for credentials
 get_login_credentials() {
-    # Prompt for username
     read -p "Enter username: " user
-    # Prompt for password
     read -sp "Enter password: " pass
     echo -e "\n"
-    # The password must be invisible while typing to ensure that no one can read it while inserting it
     return 0
 }
 
@@ -35,7 +32,7 @@ register_credentials() {
 
 # Function to verify credentials and privileges
 verify_credentials() {
-    #   check that the file exists
+
     if [[ ! -f "$credentials_file" ]]; then
         echo "Please wait creating credentials file..."
         mkdir -p "$credentials_path"
@@ -48,40 +45,51 @@ verify_credentials() {
     echo "Verifying credentials..."
 
     local stored_cred=$(grep "^$user:" "$credentials_file" | cut -d ':' -f 2-)
+    echo "Stored credentials are $stored_cred"
     if [[ -n "$stored_cred" ]]; then
         local stored_pass=$(echo "$stored_cred" | cut -d ':' -f 1)
         echo "Stored password is $stored_pass"
         local salt=$(echo "$stored_cred" | cut -d ':' -f 2)
         echo "Stored salt is $salt"
         local hashed_pass=$(echo -n "$pass$salt" | sha256sum | awk '{print $1}')
-        echo "Hashed password is $hashed_pass"
-        echo "Stored Creds are $stored_cred"
-        # Checking to see that the password of the correspoinding user matches the stored password
+        local login_status=$(echo "$stored_cred" | cut -d ':' -f 5)
+        echo "Login status is $login_status"
+
         if [[ "$stored_pass" == "$hashed_pass" ]]; then
             echo "Login successful"
-            # check whether the user is an admin or a normal user
-            local role=$(grep "^$user:" "$credentials_file" | cut -d ':' -f 3)
+            local line=$(grep "^$user:" "$credentials_file")
+            if [[ "$login_status" == "0" ]]; then
+                echo "Updating login status to 1"
+                updated_line=$(echo "$line" | awk 'BEGIN{FS=OFS=":"} {$6="1"; print}')
+                sed -i "s~$line~$updated_line~" "$credentials_file"
+            fi
+            echo "Line is $line"
+
+            local role=$(echo "$stored_cred" | cut -d ':' -f 4)
             echo "Role is $role"
             if [[ "$role" == "admin" ]]; then
                 echo "Calling admin menu"
                 admin_menu
-            else
+            elif [[ "$role" == "customer" ]]; then
+                echo "Calling Customer menu"
+                customer_menu
+            elif [[ "$role" == "pharmacist" ]]; then
+                echo "Calling Parmasist menu"
+                pharmasist_menu
 
-                echo "Calling user menu"
-                user_menu
+            else
+                echo "The role is not defined. Exiting the application...."
+                exit 1
             fi
+
         else
             echo "The provided passwords don't match"
             return 1
         fi
-        # Write here
-        # On successful login remember to update the credentials.txt file for login status to 1
-        # if the credentials provided are correct, check the role. If the role is admin, call the admin menu
-        # write here
-        # Otherwise call user menu
-        # Write your code here
+    else
+        echo -e "Unsuccessful login. Incorrect username or password. Please try again.\n"
     fi
-    echo -e "Unsuccessful login. Incorrect username or password. Please try again.\n"
+
     return 1
 }
 
@@ -100,9 +108,15 @@ logout_user() {
 }
 
 # Function for the user menu
-user_menu() {
+customer_menu() {
     echo "This is a normal user menu..."
-    exit 0
+    return 0
+}
+
+# Function for the pharmacist menu
+pharmasist_menu() {
+    echo "This is a pharmacist menu..."
+    return 0
 }
 
 # Function to display the main menu
@@ -120,10 +134,9 @@ main_menu() {
 echo "Welcome to the authentication system."
 
 while true; do
-    echo "================ User Authentication System ================"
+    echo -e "\n================ User Authentication System ================"
     main_menu
     read user_choice
-    echo "The choice entered is $user_choice"
     case $user_choice in
     1)
         get_login_credentials
