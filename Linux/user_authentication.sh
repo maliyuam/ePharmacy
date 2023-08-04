@@ -103,7 +103,6 @@ verify_credentials() {
                 updated_line=$(echo "$line" | awk 'BEGIN{FS=OFS=":"} {$6="1"; print}')
                 sed -i "s~$line~$updated_line~" "$credentials_file"
             fi
-            echo "Line is $line"
 
             local role=$(echo "$stored_cred" | cut -d ':' -f 4)
             echo "Role is $role"
