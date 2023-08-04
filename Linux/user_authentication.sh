@@ -68,13 +68,11 @@ register_credentials() {
 
 generte_user_id() {
     generated_id=$(date +%Y%m%d%H%M%S%N)-$$
-    echo "$generated_id "
     return 0
 }
 
 # Function to verify credentials and privileges
 verify_credentials() {
-
     if [[ ! -f "$credentials_file" ]]; then
         echo "Please wait creating credentials file..."
         mkdir -p "$credentials_path"
@@ -121,18 +119,18 @@ verify_credentials() {
 
             else
                 echo "The role is not defined. Exiting the application...."
-                exit 1
+                exit 0
             fi
 
         else
             echo "The provided passwords don't match"
-            return 1
+            return 0
         fi
     else
         echo -e "Unsuccessful login. Incorrect username or password. Please try again.\n"
     fi
 
-    return 1
+    return 0
 }
 
 # Function for the admin menu
@@ -141,12 +139,16 @@ admin_menu() {
     # This function must allow the logged in user to create many users.
 
     # Write your code here
+    # will have to call the register_credentials function but with a parameter
+    echo "This is an admin menu..."
+    
     return 0
 }
 
 logout_user() {
     #   handle the logout functionality here where we'll change the login status to 0
     echo "Logging out of the application"
+    exit 0
 }
 
 # Function for the user menu
