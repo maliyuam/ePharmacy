@@ -30,11 +30,14 @@ register_credentials() {
     read -p "Enter name: " name
     read -p "Enter username: " user
     read -sp "Enter password: " pass
+    echo -e "\n"
     read -sp "Confirm password: " confirm_pass
-    local line=$(grep "^$user2:" "$credentials_file")
+    local line=$(grep "^$user:" "$credentials_file")
     if [[ -n "$line" ]]; then
-        echo -e "The username already exists. Please try again with a different username.\n"
+        echo -e "\nThe username already exists. Please try again with a different username.\n"
         return 1
+    else
+        echo -e "\n Username is available."
     fi
     if [[ "$pass" != "$confirm_pass" ]]; then
         echo -e "\nPasswords do not match. Please try again.\n"
@@ -56,8 +59,9 @@ register_credentials() {
         esac
     else
         echo -e "\n"
-
-        local user_id=$(generte_user_id)
+        generte_user_id
+        local user_id="$generated_id"
+        echo "User ID is $user_id"
         local pass=$(hash_password "$pass")
         local hashed_pass=$(echo "$pass" | cut -d ':' -f 1)
         local salt=$(echo "$pass" | cut -d ':' -f 2)
@@ -85,37 +89,28 @@ verify_credentials() {
     echo "Verifying credentials..."
 
     local stored_cred=$(grep "^$user:" "$credentials_file" | cut -d ':' -f 2-)
-    echo "Stored credentials are $stored_cred"
     if [[ -n "$stored_cred" ]]; then
         local stored_pass=$(echo "$stored_cred" | cut -d ':' -f 1)
-        echo "Stored password is $stored_pass"
         local salt=$(echo "$stored_cred" | cut -d ':' -f 2)
-        echo "Stored salt is $salt"
         local hashed_pass=$(echo -n "$pass$salt" | sha256sum | awk '{print $1}')
         local login_status=$(echo "$stored_cred" | cut -d ':' -f 5)
-        echo "Login status is $login_status"
-
         if [[ "$stored_pass" == "$hashed_pass" ]]; then
             echo "Login successful"
-            local line=$(grep "^$user:" "$credentials_file")
+             local line=$(grep "^$user:" "$credentials_file")
             if [[ "$login_status" == "0" ]]; then
-                echo "Updating login status to 1"
                 updated_line=$(echo "$line" | awk 'BEGIN{FS=OFS=":"} {$6="1"; print}')
                 sed -i "s~$line~$updated_line~" "$credentials_file"
             fi
-
             local role=$(echo "$stored_cred" | cut -d ':' -f 4)
-            echo "Role is $role"
             if [[ "$role" == "admin" ]]; then
-                echo "Calling admin menu"
-                admin_menu
+                echo "$line"
+                admin_menu "$line"
             elif [[ "$role" == "customer" ]]; then
                 echo "Calling Customer menu"
-                customer_menu
+                customer_menu "$line"
             elif [[ "$role" == "pharmacist" ]]; then
                 echo "Calling Parmasist menu"
-                pharmasist_menu
-
+                pharmasist_menu "$line"
             else
                 echo "The role is not defined. Exiting the application...."
                 exit 0
@@ -134,14 +129,44 @@ verify_credentials() {
 
 # Function for the admin menu
 admin_menu() {
-    # write a logic that allows a user logged in as admin to create an account.
-    # This function must allow the logged in user to create many users.
+    echo "This is a customer menu..."
+    echo "1. Display all products"
+    echo "2. Search for a product"
+    echo "3. Add a product to cart"
+    echo "4. Remove a product from cart"
+    echo "5. Display cart"
+    echo "6. Checkout"
+    echo "7. Display Details"
+    read -p "Enter your choice: " choice
+    case $choice in
+    1)
+        echo "Displaying all products..."
+        ;;
+    2)
+        echo "Searching for a product..."
+        ;;
+    3)
+        echo "Adding a product to cart..."
+        ;;
+    4)
+        echo "Removing a product from cart..."
+        ;;
+    5)
+        echo "Displaying cart..."
+        ;;
+    6)
+        echo "Checking out..."
+        ;;
+    7)
+        display_details "$1"
+        ;;
+    *)
+        echo "Invalid choice. Please try again."
+        ;;
+    esac
 
-    # Write your code here
-    # will have to call the register_credentials function but with a parameter
-    echo "This is an admin menu..."
-    
     return 0
+
 }
 
 logout_user() {
@@ -152,7 +177,56 @@ logout_user() {
 
 # Function for the user menu
 customer_menu() {
-    echo "This is a normal user menu..."
+    echo "This is a customer menu..."
+    echo "1. Display all products"
+    echo "2. Search for a product"
+    echo "3. Add a product to cart"
+    echo "4. Remove a product from cart"
+    echo "5. Display cart"
+    echo "6. Checkout"
+    echo "7. Display Details"
+    read -p "Enter your choice: " choice
+    case $choice in
+    1)
+        echo "Displaying all products..."
+        ;;
+    2)
+        echo "Searching for a product..."
+        ;;
+    3)
+        echo "Adding a product to cart..."
+        ;;
+    4)
+        echo "Removing a product from cart..."
+        ;;
+    5)
+        echo "Displaying cart..."
+        ;;
+    6)
+        echo "Checking out..."
+        ;;
+    7)
+        display_details "$1"
+        ;;
+    *)
+        echo "Invalid choice. Please try again."
+        ;;
+    esac
+
+    return 0
+
+}
+
+# Function to display the details of the user
+display_details() {
+
+    local line=$1
+    local user=$(echo "$line" | cut -d ':' -f 1)
+    local name=$(echo "$line" | cut -d ':' -f 4)
+    local role=$(echo "$line" | cut -d ':' -f 5)
+    local login_status=$(echo "$line" | cut -d ':' -f 6)
+    local user_id=$(echo "$line" | cut -d ':' -f 7)
+    echo "id: $user_id||username: $user||name: $name||role: $role||login_status: $login_status"
     return 0
 }
 
@@ -169,7 +243,6 @@ main_menu() {
     echo "2. Register"
     echo "3. Exit"
     echo -n "Enter your choice: "
-
 }
 
 # Main script execution starts here
@@ -182,6 +255,7 @@ while true; do
     case $user_choice in
     1)
         get_login_credentials
+
         verify_credentials "$user" "$pass"
         ;;
     2)
