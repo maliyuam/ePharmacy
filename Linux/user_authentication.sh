@@ -1,8 +1,8 @@
 #!/bin/bash
 
 credentials_file="data/credentials.txt"
+login_data_file="data/.logged_in"
 credentials_path="data"
-
 # Function to prompt for credentials
 get_login_credentials() {
     read -p "Enter username: " user
@@ -58,15 +58,18 @@ register_credentials() {
             ;;
         esac
     else
+        if [[ ! -f "$credentials_file" ]]; then
+            echo "Please wait creating credentials file..."
+            mkdir -p "$credentials_path"
+            touch "$credentials_file"
+        fi
         echo -e "\n"
-        generte_user_id
-        local user_id="$generated_id"
         echo "User ID is $user_id"
         local pass=$(hash_password "$pass")
         local hashed_pass=$(echo "$pass" | cut -d ':' -f 1)
         local salt=$(echo "$pass" | cut -d ':' -f 2)
         echo -e "Registration successful. You can now log in.\n"
-        echo -e "$user:$hashed_pass:$salt:$name:$role:0:$user_id" >>"$credentials_file"
+        echo -e "$user:$hashed_pass:$salt:$name:$role:0" >>"$credentials_file"
     fi
 }
 
@@ -96,10 +99,11 @@ verify_credentials() {
         local login_status=$(echo "$stored_cred" | cut -d ':' -f 5)
         if [[ "$stored_pass" == "$hashed_pass" ]]; then
             echo "Login successful"
-             local line=$(grep "^$user:" "$credentials_file")
+            local line=$(grep "^$user:" "$credentials_file")
             if [[ "$login_status" == "0" ]]; then
                 updated_line=$(echo "$line" | awk 'BEGIN{FS=OFS=":"} {$6="1"; print}')
                 sed -i "s~$line~$updated_line~" "$credentials_file"
+                echo "$user" >"$login_data_file"
             fi
             local role=$(echo "$stored_cred" | cut -d ':' -f 4)
             if [[ "$role" == "admin" ]]; then
@@ -113,6 +117,7 @@ verify_credentials() {
                 pharmasist_menu "$line"
             else
                 echo "The role is not defined. Exiting the application...."
+                logout_user
                 exit 0
             fi
 
@@ -170,8 +175,18 @@ admin_menu() {
 }
 
 logout_user() {
-    #   handle the logout functionality here where we'll change the login status to 0
-    echo "Logging out of the application"
+    # check for the file existence for the login data
+    if [[ ! -f "$login_data_file" ]]; then
+        echo "You are not logged in. Please login to continue."
+        return 1
+    else
+        # read the username from the login data file
+        local user=$(cat "$login_data_file")
+        local line=$(grep "^$user:" "$credentials_file")
+        updated_line=$(echo "$line" | awk 'BEGIN{FS=OFS=":"} {$6="0"; print}')
+        sed -i "s~$line~$updated_line~" "$credentials_file"
+        rm -f "$login_data_file"
+    fi
     exit 0
 }
 
@@ -235,6 +250,19 @@ pharmasist_menu() {
     echo "This is a pharmacist menu..."
     return 0
 }
+
+function ctrl_c() {
+    echo -e "\n Unexpected exit. Exiting the application..."
+    logout_user
+    exit 1
+}
+function on_exit() {
+    echo -e "\n Script is exiting..."
+    logout_user
+
+}
+trap on_exit EXIT
+trap ctrl_c SIGINT
 
 # Function to display the main menu
 # this function will need that we
