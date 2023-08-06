@@ -64,7 +64,6 @@ register_credentials() {
             touch "$credentials_file"
         fi
         echo -e "\n"
-        echo "User ID is $user_id"
         local pass=$(hash_password "$pass")
         local hashed_pass=$(echo "$pass" | cut -d ':' -f 1)
         local salt=$(echo "$pass" | cut -d ':' -f 2)
