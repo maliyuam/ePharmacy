@@ -1,8 +1,8 @@
 #!/bin/bash
 
-credentials_file="data/credentials.txt"
-login_data_file="data/.logged_in"
-credentials_path="data"
+credentials_file="../data/credentials.txt"
+login_data_file="../data/.logged_in"
+credentials_path="../data"
 # Function to prompt for credentials
 get_login_credentials() {
     read -p "Enter username: " user
@@ -175,18 +175,13 @@ admin_menu() {
 }
 
 logout_user() {
-    # check for the file existence for the login data
-    if [[ ! -f "$login_data_file" ]]; then
-        echo "You are not logged in. Please login to continue."
-        return 1
-    else
-        # read the username from the login data file
-        local user=$(cat "$login_data_file")
-        local line=$(grep "^$user:" "$credentials_file")
-        updated_line=$(echo "$line" | awk 'BEGIN{FS=OFS=":"} {$6="0"; print}')
-        sed -i "s~$line~$updated_line~" "$credentials_file"
-        rm -f "$login_data_file"
-    fi
+    # read the username from the login data file
+    local user=$(cat "$login_data_file")
+    local line=$(grep "^$user:" "$credentials_file")
+    updated_line=$(echo "$line" | awk 'BEGIN{FS=OFS=":"} {$6="0"; print}')
+    sed -i "s~$line~$updated_line~" "$credentials_file"
+    rm -f "$login_data_file"
+
     exit 0
 }
 
