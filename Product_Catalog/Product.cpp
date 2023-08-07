@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string.h>
+#include <string>
 #include <chrono>
 #include <random>
 
@@ -24,48 +25,48 @@ public:
     string getName()
     {
         // TODO Add code that return the Product Name
-        return name;
+        return this->name;
     }
 
     string getBrand()
     {
         // TODO Add code that return the Product Brand
-        return brand;
+        return this->brand;
     }
 
     string getDecrisption()
     {
         // TODO Add code that return the Product Description
-        return description;
+        return this->description;
     }
 
     string getDosageInstraction()
     {
         // TODO Add code that return the Product Dosage Instruction
-        return dosageInstruction;
+        return this->dosageInstruction;
     }
 
     string getCategory()
     {
         // TODO Add code that return the Product Category
-        return category;
+        return this->category;
     }
 
     int getQuantity()
     {
         // TODO Add code that return the Product Quantity
-        return quantity;
+        return this->quantity;
     }
 
     float getPrice()
     {
-        return price;
+        return this->price;
     }
 
     bool getRequiresPrescription()
     {
         // TODO Add code that return Product Requires Prescription status
-        return requires_prescription;
+        return this->requires_prescription;
     }
 
     string generateUniqueCode()
@@ -140,35 +141,55 @@ public:
     void createProduct(){
 
         // TODO Add code that calls promptTextField() method and prompt user for entering product name and update the name field.
+        this->name = promptTextField("Enter product name");
         // TODO Add code that calls promptTextField() method and prompt user for entering product brand and update the brand field.
+        this->brand = promptTextField("Enter product brand");
         // TODO Add code that calls promptTextField() method and prompt user for entering product description and update the decription field.
+        this->description = promptTextField("Enter product description");
         // TODO Add code that calls promptTextField() method and prompt user for entering product category and update the category field.
+        this->category = promptTextField("Enter product category");
         // TODO Add code that calls promptTextField() method and prompt user for entering product dosageInstruction and update the dosage instruction field.
+        this->dosageInstruction = promptTextField("Enter product dosage instruction");
         // TODO Add code that calls promptNumberField() method and prompt user for entering product quantity and update the quantity field.
+        this->quantity = promptNumberField("Enter product quantity");
         // TODO Add code that calls promptNumberField() method and prompt user for entering product price and update the price field.
+        this->price = promptNumberField("Enter product price");
         // TODO Add code that calls promptRequirePrescription() method and prompt user for entering product requires presc and update the requiresprescription field.
-
+        this->requires_prescription = promptRequirePrescription();
         // Add code to generate Unique code for product using generateUniqueCode method
+        this->code = generateUniqueCode();
 
     };
 
     string toJson()
     {
-
         string productInJson;
+        productInJson = "{\"code\":\"" + this->code + "\"," +
+                        "\"name\":\"" + this->name + "\","+
+                        "\"brand\":\"" + this->brand + "\","+
+                        "\"description\":\""+this->description + "\","+
+                        "\"dosage_instruction\":\""+this->dosageInstruction +"\""+
+                        "\"price\":"+to_string(this->price)+","+
+                        "\"quantity\":"+to_string(this->quantity)+","+
+                        "\"category\":\""+this->category+"\","+
+                        "\"requires_prescription\":"+to_string(this->requires_prescription)+"}";
 
-        // TODO Add code for converting a product to json form from the private declared attributes.
-        // The Output should look like:
-        //{"code":"tgtwdNbCnwx","name":"name 1","brand":"br 2","description":"df","dosage_instruction":"dfg","price":123.000000,"quantity":13,"category":"des","requires_prescription":1}
 
         return productInJson;
     };
 
     void productFromJson(string txt){
-        // TODO Add code to convert a json string product to product object
-        //  string is in the form below
-        //{"code":"tgtwdNbCnwx","name":"name 1","brand":"br 2","description":"df","dosage_instruction":"dfg","price":123.000000,"quantity":13,"category":"des","requires_prescription":1}
-        //  You need to extract value for each field and update private attributes declared above.
+        // TODO Add code that parses the json string and update the product object  
+        this->code = txt.substr(txt.find("code")+7,txt.find(",")-txt.find("code")-8);
+        this->name = txt.substr(txt.find("name")+7,txt.find(",")-txt.find("name")-8);
+        this->brand = txt.substr(txt.find("brand")+8,txt.find(",")-txt.find("brand")-9);
+        this->description = txt.substr(txt.find("description")+13,txt.find(",")-txt.find("description")-14);
+        this->dosageInstruction = txt.substr(txt.find("dosage_instruction")+21,txt.find(",")-txt.find("dosage_instruction")-22);
+        this->price = stof(txt.substr(txt.find("price")+7,txt.find(",")-txt.find("price")-8));
+        this->quantity = stoi(txt.substr(txt.find("quantity")+10,txt.find(",")-txt.find("quantity")-11));
+        this->category = txt.substr(txt.find("category")+10,txt.find(",")-txt.find("category")-11);
+        this->requires_prescription = txt.substr(txt.find("requires_prescription")+23,txt.find("}")-txt.find("requires_prescription")-24) == "true" ? true : false;
+        
 
     };
 };
