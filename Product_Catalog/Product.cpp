@@ -119,7 +119,7 @@ public:
 
     bool promptRequirePrescription()
     {
-        cout << "Does this product require prescription? (Y/N)" << endl;
+        cout << "Does this product require prescription? (Y/N):" ;
         string userInput;
         cin >> userInput;
         if (userInput == "Y" || userInput == "y")
