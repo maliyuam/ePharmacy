@@ -213,7 +213,7 @@ customer_menu() {
         ;;
     6)
         echo "Checking out..."
-        ;;
+        ;;  
     7)
         display_details "$1"
         ;;
