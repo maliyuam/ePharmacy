@@ -4,37 +4,91 @@ class ProductManager
 {
 private:
     Product prod;
+    FileHandler fileHandler;
+
 public:
-    int getMenu(){
+    int getMenu()
+    {
+        int choice;
+        bool validInput = false;
 
-        // TODO Add code to display Menu
-        // Menu should have 
-        // Add Product
-        //Search Product By Name
-        //Search Product By Category
-        //Search Product By Brand
-        // Update Product
-        // Delete Product
+        while (!validInput)
+        {
+            cout << "1. Add Product" << endl;
+            cout << "2. Search Product By Name" << endl;
+            cout << "3. Search Product By Category" << endl;
+            cout << "4. Search Product By Brand" << endl;
+            cout << "5. Update Product" << endl;
+            cout << "7. Delete Product" << endl;
+            cout << "Enter Your choice:";
+
+            string input;
+            cin >> input;
+            try
+            {
+                choice = std::stoi(input);
+                validInput = true;
+                switch (choice)
+                {
+                case 1:
+                    cout << "Adding Product Initiated...." << endl;
+                    this->addProduct();
+                    break;
+                case 2:
+                    cout << "search Product initiated.....";
+                    break;
+                case 3:
+                    cout << "search Product initiated.....";
+                    break;
+                case 4:
+                    cout << "search Product initiated.....";
+                    break;
+                case 5:
+                    cout << "Update Product.....";
+                    break;
+                case 6:
+                    cout << "Update Product initiated.....";
+                    break;
+                case 7:
+                    cout << "Delete Product initiated.....";
+                    break;
+
+                default:
+                    break;
+                }
+            }
+            catch (const std::invalid_argument &e)
+            {
+                cout << "Invalid input. Please enter an integer." << &e << endl;
+            }
+        }
+
+        return 0;
     }
 
-    void addProduct(){
-        // TODO add code to add product and 
+    void addProduct()
+    {
+        // TODO add code to add product and
         // store the product to products.json file by using Product class and FileHandler class
+        this->prod.createProduct();
+        this->fileHandler.saveToJsonFile(this->prod);
     }
-
-    // TODO Add code for Updating a product
-
-    // TODO Add code for deleting a product
-    
+    Product updateProduct()
+    {
+    }
+    void deleteProduct(string code)
+    {
+    }
 };
 
 int main()
 {
+    ProductManager manager;
 
-    // ADD Code for displaying a welcome Menu
-    // and handle all required logic to add, search, update, and delete product
+    while (true)
+    {
+        manager.getMenu();
+    }
 
     return 0;
 }
-
-

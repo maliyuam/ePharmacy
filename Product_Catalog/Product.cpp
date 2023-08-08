@@ -21,6 +21,25 @@ private:
     string category;
     bool requires_prescription;
 
+    // TODO Add other attributes as needed
+    string getCode(string token,bool trimQuotes = false)
+    {
+        // split the token string into an array of strings based on the colon
+        vector<string> parts;
+        stringstream ss(token);
+        string part;
+        while (getline(ss, part, ':'))
+        {
+            parts.push_back(part);
+        }
+        string code = parts[1];
+        if(trimQuotes){
+            code = code.substr(1,code.length()-2);
+        }
+        return code;
+    }
+ 
+
 public:
     string getName()
     {
@@ -110,17 +129,13 @@ public:
         cout << promptText << ":" << endl;
         float userInput;
         // Performing input validation to check if user input is a number
-        while (!(cin >> userInput))
-        {
-            cout << "Invalid Input. Please enter a number." << endl;
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        }
+        cin >> userInput;
+        return userInput;
     }
 
     bool promptRequirePrescription()
     {
-        cout << "Does this product require prescription? (Y/N):" ;
+        cout << "Does this product require prescription? (Y/N):";
         string userInput;
         cin >> userInput;
         if (userInput == "Y" || userInput == "y")
@@ -138,7 +153,8 @@ public:
         }
     }
 
-    void createProduct(){
+    void createProduct()
+    {
 
         // TODO Add code that calls promptTextField() method and prompt user for entering product name and update the name field.
         this->name = promptTextField("Enter product name");
@@ -158,38 +174,61 @@ public:
         this->requires_prescription = promptRequirePrescription();
         // Add code to generate Unique code for product using generateUniqueCode method
         this->code = generateUniqueCode();
-
     };
+
 
     string toJson()
     {
+        cout << this->price << endl;
+        cout << this->quantity << endl;
         string productInJson;
         productInJson = "{\"code\":\"" + this->code + "\"," +
-                        "\"name\":\"" + this->name + "\","+
-                        "\"brand\":\"" + this->brand + "\","+
-                        "\"description\":\""+this->description + "\","+
-                        "\"dosage_instruction\":\""+this->dosageInstruction +"\""+
-                        "\"price\":"+to_string(this->price)+","+
-                        "\"quantity\":"+to_string(this->quantity)+","+
-                        "\"category\":\""+this->category+"\","+
-                        "\"requires_prescription\":"+to_string(this->requires_prescription)+"}";
-
+                        "\"name\":\"" + this->name + "\"," +
+                        "\"brand\":\"" + this->brand + "\"," +
+                        "\"description\":\"" + this->description + "\"," +
+                        "\"dosage_instruction\":\"" + this->dosageInstruction + "\"," +
+                        "\"price\":" + to_string(this->price) + "," +
+                        "\"quantity\":" + to_string(this->quantity) + "," +
+                        "\"category\":\"" + this->category + "\"," +
+                        "\"requires_prescription\":" + to_string(this->requires_prescription) + "}";
 
         return productInJson;
     };
 
-    void productFromJson(string txt){
-        // TODO Add code that parses the json string and update the product object  
-        this->code = txt.substr(txt.find("code")+7,txt.find(",")-txt.find("code")-8);
-        this->name = txt.substr(txt.find("name")+7,txt.find(",")-txt.find("name")-8);
-        this->brand = txt.substr(txt.find("brand")+8,txt.find(",")-txt.find("brand")-9);
-        this->description = txt.substr(txt.find("description")+13,txt.find(",")-txt.find("description")-14);
-        this->dosageInstruction = txt.substr(txt.find("dosage_instruction")+21,txt.find(",")-txt.find("dosage_instruction")-22);
-        this->price = stof(txt.substr(txt.find("price")+7,txt.find(",")-txt.find("price")-8));
-        this->quantity = stoi(txt.substr(txt.find("quantity")+10,txt.find(",")-txt.find("quantity")-11));
-        this->category = txt.substr(txt.find("category")+10,txt.find(",")-txt.find("category")-11);
-        this->requires_prescription = txt.substr(txt.find("requires_prescription")+23,txt.find("}")-txt.find("requires_prescription")-24) == "true" ? true : false;
-        
+    void productFromJson(string txt)
+    {
+        //    eliminate the first and last character of the string
+        txt = txt.substr(1, txt.length() - 2);
+        // split the string into an array of strings based on the comma
+        std::vector<std::string> tokens;
+        std::stringstream ss(txt);
+        std::string token;
+        while (std::getline(ss, token, ','))
+        {
+            tokens.push_back(token);
+        }
+        // loop through the array of strings and split each string into an array of strings based on the colon
+        this->code = this->getCode(tokens[0], true);
+        this->name = this->getCode(tokens[1], true);
+        this->brand = this->getCode(tokens[2], true);
+        this->description = this->getCode(tokens[3], true);
+        this->dosageInstruction = this->getCode(tokens[4], true);
+        this->price = stof(this->getCode(tokens[5], false));
+        this->quantity = stoi(this->getCode(tokens[6], false));
+        this->category = this->getCode(tokens[7], true);
+        this->requires_prescription = stoi(this->getCode(tokens[8], false)) == 1 ? true : false;
+    };
 
+    friend std::ostream &operator<<(std::ostream &os, const Product &product)
+    {
+        os << "Code: " << product.code << "\n";
+        os << "Name: " << product.name << "\n";
+        os << "Brand: " << product.brand << "\n";
+        os << "Description: " << product.description << "\n";
+        os << "Dosage Instruction: " << product.dosageInstruction << "\n";
+        os << "Price: " << product.price << "\n";
+        os << "Quantity: " << product.quantity << "\n";
+        os << "Category: " << product.category << "\n";
+        return os;
     };
 };
