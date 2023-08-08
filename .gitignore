@@ -1,1 +1,8 @@
 /data
+# add the .vscode folder to the .gitignore file
+
+# add the following to the .gitignore file
+.vscode
+# add any file with the extension .exe and .out
+*.exe
+*.out

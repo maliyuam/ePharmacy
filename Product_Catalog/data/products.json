@@ -1,24 +1,6 @@
 [
-    {
-        "code": "uPYqlMY7Y3i",
-        "name": "sdsd",
-        "brand": "sd",
-        "description": "sd",
-        "dosage_instruction": "sd",
-        "price": 3.000000,
-        "quantity": 2,
-        "category": "sd",
-        "requires_prescription": 1
-    },
-    {
-        "code": "iHCIxRMtQEe",
-        "name": "sdsd",
-        "brand": "sds",
-        "description": "sdsd",
-        "dosage_instruction": "wewe",
-        "price": 500.000000,
-        "quantity": 4,
-        "category": "sdsd",
-        "requires_prescription": 1
-    }
+{"code":"NZW9ClBDiG7","name":"wewe","brand":"ewe","description":"wewe","dosage_instruction":"wewe","price":66.000000,"quantity":5,"category":"wewe","requires_prescription":1},
+{"code":"qp7wqnsYHui","name":"ghgh","brand":"ghgh","description":"ghgh","dosage_instruction":"fhggf","price":55.000000,"quantity":1,"category":"ghgh","requires_prescription":1},
+{"code":"hV4jhp0NYup","name":"yuu","brand":"yuyu","description":"yuyu","dosage_instruction":"yuyu","price":6.000000,"quantity":6,"category":"yuy","requires_prescription":1},
+{"code":"0Vv0sd4GRCJ","name":"Te","brand":"gh","description":"we","dosage_instruction":"as","price":6.000000,"quantity":3,"category":"hj","requires_prescription":1}
 ]

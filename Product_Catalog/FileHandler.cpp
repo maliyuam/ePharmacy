@@ -31,12 +31,13 @@ public:
 
         while (getline(prodsFile, prodLine))
         {
+
             prodLines.push_back(prodLine);
 
             if (prodLine.substr(0, 1) == "{")
             {
+
                 manProd.productFromJson(prodLine);
-                cout<<"PRODUCT DATA:"<< manProd<<endl;
                 prodList.push_back(manProd);
             }
         }
@@ -48,11 +49,8 @@ public:
     {
         // Add code here
         vector<Product> pList;
-
         pList = readJsonFile();
-
         pList.push_back(p);
-
         int ret = remove(filename.c_str());
         if (ret != 0)
         {
@@ -64,14 +62,14 @@ public:
         jsonFile << "[" << endl;
         for (int i = 0; i < pList.size(); i++)
         {
-            jsonFile << pList[i].toJson()<<"\n";
-            Product p ;
-            p.productFromJson(pList[i].toJson());
-            cout<<"PRODUCT DATA:"<< p<<endl;
-            
+            jsonFile << pList[i].toJson();
             if (i != pList.size() - 1)
             {
                 jsonFile << "," << endl;
+            }
+            else
+            {
+                jsonFile << endl;
             }
         }
         jsonFile << "]" << endl;

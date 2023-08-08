@@ -68,8 +68,6 @@ public:
 
     void addProduct()
     {
-        // TODO add code to add product and
-        // store the product to products.json file by using Product class and FileHandler class
         this->prod.createProduct();
         this->fileHandler.saveToJsonFile(this->prod);
     }
