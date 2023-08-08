@@ -75,4 +75,31 @@ public:
         jsonFile << "]" << endl;
         jsonFile.close();
     }
+    void updateFile(vector<Product> pList)
+    {
+        FileHandler fh;
+        int ret = remove(fh.filename.c_str());
+        if (ret != 0)
+        {
+            std::cout << "Error deleting file: " << strerror(errno) << "\n";
+            return;
+        }
+
+        ofstream jsonFile(fh.filename);
+        jsonFile << "[" << endl;
+        for (int i = 0; i < pList.size(); i++)
+        {
+            jsonFile << pList[i].toJson();
+            if (i != pList.size() - 1)
+            {
+                jsonFile << "," << endl;
+            }
+            else
+            {
+                jsonFile << endl;
+            }
+        }
+        jsonFile << "]" << endl;
+        jsonFile.close();
+    }
 };

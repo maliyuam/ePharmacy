@@ -62,7 +62,7 @@ public:
         regex pattern(".*" + this->searchText + ".*", std::regex_constants::icase);
         for (Product p : plist)
         {
-            string brandName = this->to_lowercase(p.getName());
+            string brandName = this->to_lowercase(p.getBrand());
             if (regex_search(brandName, pattern))
             {
                 foundProducts.push_back(p);
@@ -72,8 +72,13 @@ public:
     };
 
     void showSearchResult(vector<Product> plist, string sTxt)
-    {
-        // TODO
-        // Add code to display Search results
+    { 
+        cout<<"------------------------------------------------------------------------------------------------------------------"<<endl;
+        cout << "Search Result for " << sTxt << " returned " << plist.size() << " matching items"<<endl;
+        cout<<"------------------------------------------------------------------------------------------------------------------"<<endl;
+        for (Product p : plist)
+        {
+            cout << p;
+        }
     }
 };

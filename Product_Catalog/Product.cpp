@@ -41,6 +41,29 @@ private:
     }
 
 public:
+    Product()
+    {
+    }
+    Product(
+        string name,
+        string brand,
+        string description,
+        float price,
+        string dosageInstruction,
+        string category,
+        bool requires_prescription,
+        int quantity)
+    {
+        this->name = name;
+        this->brand = brand;
+        this->description = description;
+        this->price = price;
+        this->dosageInstruction = dosageInstruction;
+        this->category = category;
+        this->requires_prescription = requires_prescription;
+        this->quantity = quantity;
+    }
+
     string getName()
     {
         // TODO Add code that return the Product Name
@@ -88,6 +111,12 @@ public:
         return this->requires_prescription;
     }
 
+    bool compareCode(string code)
+    {
+        // TODO Add code that return true if the code matches the product code
+        return this->code == code;
+    }
+
     string generateUniqueCode()
     {
         string characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -113,7 +142,7 @@ public:
     {
         cout << promptText << ":" << endl;
         string userInput;
-        cin >> userInput;
+        getline(cin, userInput);
         if (userInput.length() == 0)
         {
             cout << "Invalid Input. Please try again." << endl;
@@ -129,7 +158,13 @@ public:
         cout << promptText << ":" << endl;
         float userInput;
         // Performing input validation to check if user input is a number
-        cin >> userInput;
+        while (!(cin >> userInput))
+        {
+            cout << "Invalid Input. Please try again." << endl;
+            cin.clear();
+            cin.ignore(123, '\n');
+            cout << promptText << ":" << endl;
+        }
         return userInput;
     }
 
@@ -151,7 +186,9 @@ public:
             cout << "Invalid Input. Please try again." << endl;
             promptRequirePrescription();
         }
-    }
+        return false;
+
+    };
 
     void createProduct()
     {
@@ -186,9 +223,7 @@ public:
 
     void productFromJson(string txt)
     {
-        //    eliminate the first and last character of the string
         txt = txt.substr(1, txt.length() - 2);
-        // split the string into an array of strings based on the comma
         std::vector<std::string> tokens;
         std::stringstream ss(txt);
         std::string token;
@@ -196,7 +231,6 @@ public:
         {
             tokens.push_back(token);
         }
-        // loop through the array of strings and split each string into an array of strings based on the colon
         this->code = this->getCode(tokens[0], true);
         this->name = this->getCode(tokens[1], true);
         this->brand = this->getCode(tokens[2], true);
@@ -217,7 +251,9 @@ public:
         os << "Dosage Instruction: " << product.dosageInstruction << " || ";
         os << "Price: " << product.price << " || ";
         os << "Quantity: " << product.quantity << " || ";
-        os << "Category: " << product.category << " || \n ";
+        os << "Category: " << product.category << " ||";
+        os << "Requires Prescription: " << product.requires_prescription << " || \n";
+
         return os;
     };
 };
