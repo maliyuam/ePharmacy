@@ -15,7 +15,7 @@ public:
 
         while (!validInput)
         {
-            cout << "1. Add Product" << endl;
+            cout << "\n\n1. Add Product" << endl;
             cout << "2. Search Product By Name" << endl;
             cout << "3. Search Product By Category" << endl;
             cout << "4. Search Product By Brand" << endl;
@@ -195,12 +195,8 @@ public:
             }
             else
             {
-             
-               cout<< "new price"<<newPrice<<endl;
-                cout<< "old price"<<prod.getPrice()<<endl;
-                cout<<"Testing"<< checkPrice(newPrice, prod.getPrice())<<endl;
-                arrangedPrice = checkPrice(newPrice, prod.getPrice());
 
+                arrangedPrice = checkPrice(newPrice, prod.getPrice());
             }
             string newQuantity;
             int arrangedQuantity;
@@ -297,12 +293,17 @@ public:
     void deleteProduct(string code)
     {
         vector<Product> plist = fileHandler.readJsonFile();
+        std::unique_ptr<Product> product = nullptr;
+        int i;
         int index = -1;
-        for (int i = 0; i < plist.size(); i++)
+
+        for (i = 0; i < plist.size(); i++)
         {
             bool found = plist[i].compareCode(code);
             if (found == 1 || found == true)
             {
+                product = std::make_unique<Product>(plist[i]);
+                prod = plist[i];
                 index = i;
                 break;
             }
@@ -311,7 +312,7 @@ public:
         {
             plist.erase(plist.begin() + index);
             fileHandler.updateFile(plist);
-            cout << "Product deleted successfully";
+            cout << "Product deleted successfully" << endl;
         }
         else
         {

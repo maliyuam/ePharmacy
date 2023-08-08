@@ -114,14 +114,13 @@ public:
     }
 
     bool compareCode(string code)
-    { 
+    {
         // TODO Add code that return true if the code matches the Product code
-        if(code.compare(this->code)==0){
+        if (code.compare(this->code) == 0)
+        {
             // cout<<"Product found"<<endl;
-            cout<<"Hi Bless Pearl"<<endl;
             return true;
         }
-        cout<<"Saah Peri Na ha";
         return false;
     }
 
@@ -214,8 +213,6 @@ public:
 
     string toJson()
     {
-        cout << this->price << endl;
-        cout << this->quantity << endl;
         string productInJson;
         productInJson = "{\"code\":\"" + this->code + "\"," +
                         "\"name\":\"" + this->name + "\"," +
