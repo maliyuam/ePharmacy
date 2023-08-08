@@ -21,11 +21,13 @@ hash_password() {
 # Function to register new credentials
 register_credentials() {
     local role=""
+    local genPass="0"
     # check that parameter one is not empty
     if [[ -z "$1" ]]; then
         role="customer"
     else
         role="$1"
+        local genPass="1"
     fi
     read -p "Enter name: " name
     read -p "Enter username: " user
@@ -68,7 +70,7 @@ register_credentials() {
         local hashed_pass=$(echo "$pass" | cut -d ':' -f 1)
         local salt=$(echo "$pass" | cut -d ':' -f 2)
         echo -e "Registration successful. You can now log in.\n"
-        echo -e "$user:$hashed_pass:$salt:$name:$role:0" >>"$credentials_file"
+        echo -e "$user:$hashed_pass:$salt:$name:$role:0:$genPass" >>"$credentials_file"
     fi
 }
 
@@ -96,34 +98,78 @@ verify_credentials() {
         local salt=$(echo "$stored_cred" | cut -d ':' -f 2)
         local hashed_pass=$(echo -n "$pass$salt" | sha256sum | awk '{print $1}')
         local login_status=$(echo "$stored_cred" | cut -d ':' -f 5)
-        if [[ "$stored_pass" == "$hashed_pass" ]]; then
-            echo "Login successful"
-            local line=$(grep "^$user:" "$credentials_file")
-            if [[ "$login_status" == "0" ]]; then
-                updated_line=$(echo "$line" | awk 'BEGIN{FS=OFS=":"} {$6="1"; print}')
-                sed -i "s~$line~$updated_line~" "$credentials_file"
-                echo "$user" >"$login_data_file"
-            fi
-            local role=$(echo "$stored_cred" | cut -d ':' -f 4)
-            if [[ "$role" == "admin" ]]; then
-                echo "$line"
-                admin_menu "$line"
-            elif [[ "$role" == "customer" ]]; then
-                echo "Calling Customer menu"
-                customer_menu "$line"
-            elif [[ "$role" == "pharmacist" ]]; then
-                echo "Calling Parmasist menu"
-                pharmasist_menu "$line"
+        local createPassword=$(echo "$stored_cred" | cut -d ':' -f 6)
+        echo "The status $createPassword"
+        if [[ "$createPassword" == "1" ]]; then
+            # request user to change password
+            echo "Please change your password"
+            read -sp "Enter password: " nPass
+            echo -e "\n"
+            read -sp "Confirm password: " nConf
+            if [[ "$nPass" != "$nConf" ]]; then
+                echo "Password do not match. Please try again"
+                return
             else
-                echo "The role is not defined. Exiting the application...."
-                logout_user
-                exit 0
+                local newpass=$(hash_password "$nPass")
+                local hashed_passed=$(echo "$newpass" | cut -d ':' -f 1)
+                local salt=$(echo "$newpass" | cut -d ':' -f 2)
+                local liner=$(grep "^$user:" "$credentials_file")
+                updated_liner=$(echo "$liner" | awk 'BEGIN{FS=OFS=":"} {$2="'${hashed_passed}'"; print}')
+                updated_liner=$(echo "$updated_liner" | awk 'BEGIN{FS=OFS=":"} {$3="'${salt}'"; print}')
+                updated_liner=$(echo "$updated_liner" | awk 'BEGIN{FS=OFS=":"} {$6="1"; print}')
+                updated_liner=$(echo "$updated_liner" | awk 'BEGIN{FS=OFS=":"} {$7="0"; print}')
+                sed -i "s~$liner~$updated_liner~" "$credentials_file"
+                echo "$user" >"$login_data_file"
+                echo "Password changed successfully"
+                local role=$(echo "$stored_cred" | cut -d ':' -f 4)
+                if [[ "$role" == "admin" ]]; then
+                    echo "$line"
+                    admin_menu "$line"
+                elif [[ "$role" == "customer" ]]; then
+                    echo "Calling Customer menu"
+                    customer_menu "$line"
+                elif [[ "$role" == "pharmacist" ]]; then
+                    echo "Calling Parmasist menu"
+                    pharmasist_menu "$line"
+                else
+                    echo "The role is not defined. Exiting the application...."
+                    logout_user
+                    exit 0
+                fi
+
             fi
 
         else
-            echo "The provided passwords don't match"
-            return 0
+            if [[ "$stored_pass" == "$hashed_pass" ]]; then
+                echo "Login successful"
+                local line=$(grep "^$user:" "$credentials_file")
+                if [[ "$login_status" == "0" ]]; then
+                    updated_line=$(echo "$line" | awk 'BEGIN{FS=OFS=":"} {$6="1"; print}')
+                    sed -i "s~$line~$updated_line~" "$credentials_file"
+                    echo "$user" >"$login_data_file"
+                fi
+                local role=$(echo "$stored_cred" | cut -d ':' -f 4)
+                if [[ "$role" == "admin" ]]; then
+                    echo "$line"
+                    admin_menu "$line"
+                elif [[ "$role" == "customer" ]]; then
+                    echo "Calling Customer menu"
+                    customer_menu "$line"
+                elif [[ "$role" == "pharmacist" ]]; then
+                    echo "Calling Parmasist menu"
+                    pharmasist_menu "$line"
+                else
+                    echo "The role is not defined. Exiting the application...."
+                    logout_user
+                    exit 0
+                fi
+
+            else
+                echo "The provided passwords don't match"
+                return 0
+            fi
         fi
+
     else
         echo -e "Unsuccessful login. Incorrect username or password. Please try again.\n"
     fi
@@ -133,37 +179,36 @@ verify_credentials() {
 
 # Function for the admin menu
 admin_menu() {
-    echo "This is a customer menu..."
-    echo "1. Display all products"
-    echo "2. Search for a product"
-    echo "3. Add a product to cart"
-    echo "4. Remove a product from cart"
-    echo "5. Display cart"
-    echo "6. Checkout"
-    echo "7. Display Details"
+    echo "This is Admin menu..."
+    echo "1. Display Details"
+    echo "2. Create User"
     read -p "Enter your choice: " choice
     case $choice in
     1)
-        echo "Displaying all products..."
-        ;;
-    2)
-        echo "Searching for a product..."
-        ;;
-    3)
-        echo "Adding a product to cart..."
-        ;;
-    4)
-        echo "Removing a product from cart..."
-        ;;
-    5)
-        echo "Displaying cart..."
-        ;;
-    6)
-        echo "Checking out..."
-        ;;
-    7)
+        echo "Displaying Your details"
         display_details "$1"
         ;;
+    2)
+        echo "What type of user you want to create"
+        echo "1. Customer"
+        echo "2. Pharmasist"
+        read -p "Enter your choice: " role
+        case $role in
+        1)
+            echo "Creating a customer"
+            register_credentials "customer"
+            ;;
+        2)
+            echo "Creating a Pharmasist"
+            register_credentials "pharmasist"
+            ;;
+        *)
+            echo "Invalid choice. Please try again."
+            ;;
+        esac
+
+        ;;
+
     *)
         echo "Invalid choice. Please try again."
         ;;
@@ -213,7 +258,7 @@ customer_menu() {
         ;;
     6)
         echo "Checking out..."
-        ;;  
+        ;;
     7)
         display_details "$1"
         ;;
@@ -234,9 +279,9 @@ display_details() {
     local name=$(echo "$line" | cut -d ':' -f 4)
     local role=$(echo "$line" | cut -d ':' -f 5)
     local login_status=$(echo "$line" | cut -d ':' -f 6)
-    local user_id=$(echo "$line" | cut -d ':' -f 7)
-    echo "id: $user_id||username: $user||name: $name||role: $role||login_status: $login_status"
-    return 0
+
+    echo "username: $user||name: $name||role: $role||login_status: 1"
+
 }
 
 # Function for the pharmacist menu
