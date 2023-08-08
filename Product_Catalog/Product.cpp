@@ -45,6 +45,7 @@ public:
     {
     }
     Product(
+        string code,
         string name,
         string brand,
         string description,
@@ -54,6 +55,7 @@ public:
         bool requires_prescription,
         int quantity)
     {
+        this->code = code;
         this->name = name;
         this->brand = brand;
         this->description = description;
@@ -112,9 +114,15 @@ public:
     }
 
     bool compareCode(string code)
-    {
-        // TODO Add code that return true if the code matches the product code
-        return this->code == code;
+    { 
+        // TODO Add code that return true if the code matches the Product code
+        if(code.compare(this->code)==0){
+            // cout<<"Product found"<<endl;
+            cout<<"Hi Bless Pearl"<<endl;
+            return true;
+        }
+        cout<<"Saah Peri Na ha";
+        return false;
     }
 
     string generateUniqueCode()
@@ -142,12 +150,8 @@ public:
     {
         cout << promptText << ":" << endl;
         string userInput;
-        getline(cin, userInput);
-        if (userInput.length() == 0)
-        {
-            cout << "Invalid Input. Please try again." << endl;
-            promptTextField(promptText);
-        }
+        cin >> userInput;
+        cin.ignore();
         return userInput;
     }
 
@@ -156,23 +160,29 @@ public:
     float promptNumberField(string promptText)
     {
         cout << promptText << ":" << endl;
-        float userInput;
-        // Performing input validation to check if user input is a number
-        while (!(cin >> userInput))
+        string userInput;
+        cin >> userInput;
+        cin.ignore();
+        // try to convert to number
+        try
+        {
+            float number = stof(userInput);
+            return number;
+        }
+        catch (const std::exception &e)
         {
             cout << "Invalid Input. Please try again." << endl;
-            cin.clear();
-            cin.ignore(123, '\n');
-            cout << promptText << ":" << endl;
+            promptNumberField(promptText);
         }
-        return userInput;
-    }
+        return 0;
+    };
 
     bool promptRequirePrescription()
     {
         cout << "Does this product require prescription? (Y/N):";
         string userInput;
         cin >> userInput;
+        cin.ignore();
         if (userInput == "Y" || userInput == "y")
         {
             return true;
@@ -183,11 +193,10 @@ public:
         }
         else
         {
-            cout << "Invalid Input. Please try again." << endl;
+            cout << "Invalid Test. Please try again." << endl;
             promptRequirePrescription();
         }
         return false;
-
     };
 
     void createProduct()

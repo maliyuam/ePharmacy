@@ -39,7 +39,8 @@ public:
                 case 2:
                     cout << "Search Product By Name initiated.....\n";
                     cout << "Enter Product Name:";
-                    getline(cin, text);
+                    cin >> text;
+                    cin.ignore();
                     if (text.size() == 0)
                     {
                         cout << "Please enter name to search";
@@ -53,7 +54,7 @@ public:
                 case 3:
                     cout << "Search Product By Category initiated.....";
                     cout << "Enter Required category:";
-                    getline(cin, text);
+                    cin >> text;
                     if (text.size() == 0)
                     {
                         cout << "Please enter category to search";
@@ -67,7 +68,8 @@ public:
                 case 4:
                     cout << "Search Product By Brand initiated.....";
                     cout << "Enter Required brand:";
-                    getline(cin, text);
+                    cin >> text;
+                    cin.ignore();
                     if (text.size() == 0)
                     {
                         cout << "Please enter category to search";
@@ -81,7 +83,8 @@ public:
                 case 5:
                     cout << "Update Product....." << endl;
                     cout << "Enter Product Code:";
-                    getline(cin, text);
+                    cin >> text;
+                    cin.ignore();
                     if (text.size() == 0)
                     {
                         cout << "Please enter code to update";
@@ -96,7 +99,8 @@ public:
                 case 6:
                     cout << "Delete Product initiated....." << endl;
                     cout << "Enter Product Code:";
-                    getline(cin, text);
+                    cin >> text;
+                    cin.ignore();
                     if (text.size() == 0)
                     {
                         cout << "Please enter code to delete";
@@ -131,18 +135,24 @@ public:
     {
         vector<Product> plist = fileHandler.readJsonFile();
         std::unique_ptr<Product> product = nullptr;
-        for (Product p : plist)
+        int i;
+        int index = -1;
+
+        for (i = 0; i < plist.size(); i++)
         {
-            if (p.compareCode(code))
+            bool found = plist[i].compareCode(code);
+            if (found == 1 || found == true)
             {
-                prod = p;
+                product = std::make_unique<Product>(plist[i]);
+                prod = plist[i];
+                index = i;
                 break;
             }
         }
 
         if (!product)
         {
-            cout << "Product not found";
+            cout << "Product not found" << endl;
             return;
         }
         else
@@ -150,101 +160,138 @@ public:
             string newName;
             cout << "Enter new name:";
             getline(cin, newName);
+            if (newName.size() == 0 || newName == "" || newName == " " || newName == "\n")
+            {
+                newName = prod.getName();
+            }
             string newBrand;
             cout << "Enter new brand:";
             getline(cin, newBrand);
+            if (newBrand.size() == 0 || newBrand == "" || newBrand == " " || newBrand == "\n")
+            {
+                newBrand = prod.getBrand();
+            }
             string newCategory;
             cout << "Enter new category:";
             getline(cin, newCategory);
+            if (newCategory.size() == 0 || newCategory == "" || newCategory == " " || newCategory == "\n")
+            {
+                newCategory = prod.getCategory();
+            }
             string newDescription;
             cout << "Enter new description:";
             getline(cin, newDescription);
+            if (newDescription.size() == 0 || newDescription == "" || newDescription == " " || newDescription == "\n")
+            {
+                newDescription = prod.getDecrisption();
+            }
             string newPrice;
+            float arrangedPrice;
             cout << "Enter new price:";
             getline(cin, newPrice);
-            string newQuantity;
-            cout << "Enter new quantity:";
-            getline(cin, newQuantity);
-            string newDosageInstruction;
-            cout << "Enter new dosage instruction:";
-            getline(cin, newDosageInstruction);
-            string newRequiresPrescription;
-            cout << "Enter new requires prescription:";
-            getline(cin, newRequiresPrescription);
-            string newExpiryDate;
-
-            Product p((newName.size() == 0) ? prod.getName() : newName,
-                      (newBrand.size() == 0) ? prod.getBrand() : newBrand,
-                      (newDescription.size() == 0) ? prod.getDecrisption() : newDescription,
-                      checkPrice(newPrice, prod.getPrice()),
-                      (newDosageInstruction.size() == 0) ? prod.getDosageInstraction() : newDosageInstruction,
-                      (newCategory.size() == 0) ? prod.getCategory() : newCategory,
-                      checkPrescription(newRequiresPrescription, prod.getRequiresPrescription()),
-                      checkQuantity(newQuantity, prod.getQuantity()));
-
-            // check to see product in plist with same code then update
-            // else return product not found
-            int index = -1;
-            for (int i = 0; i < plist.size(); i++)
+            if (newPrice.size() == 0 || newPrice == "" || newPrice == " " || newPrice == "\n")
             {
-                if (plist[i].compareCode(code))
-                {
-                    index = i;
-                    break;
-                }
-            }
-            if (index != -1)
-            {
-                plist[index] = p;
-                fileHandler.updateFile(plist);
-                cout << "Product updated successfully";
+                arrangedPrice = prod.getPrice();
             }
             else
             {
-                cout << "Product not found";
+             
+               cout<< "new price"<<newPrice<<endl;
+                cout<< "old price"<<prod.getPrice()<<endl;
+                cout<<"Testing"<< checkPrice(newPrice, prod.getPrice())<<endl;
+                arrangedPrice = checkPrice(newPrice, prod.getPrice());
+
             }
+            string newQuantity;
+            int arrangedQuantity;
+            cout << "Enter new quantity:";
+            getline(cin, newQuantity);
+            if (newQuantity.size() == 0 || newQuantity == "" || newQuantity == " " || newQuantity == "\n")
+            {
+                arrangedQuantity = prod.getQuantity();
+            }
+            else
+            {
+
+                arrangedQuantity = checkQuantity(newQuantity, prod.getQuantity());
+            }
+            string newDosageInstruction;
+            cout << "Enter new dosage instruction:";
+            getline(cin, newDosageInstruction);
+            if (newDosageInstruction.size() == 0 || newDosageInstruction == "" || newDosageInstruction == " " || newDosageInstruction == "\n")
+            {
+                newDosageInstruction = prod.getDosageInstraction();
+            }
+            string newRequiresPrescription;
+            bool arrangedPrescription;
+            cout << "Enter new requires prescription(Y/N):";
+            getline(cin, newRequiresPrescription);
+            if (newRequiresPrescription.size() == 0 || newRequiresPrescription == "" || newRequiresPrescription == " " || newRequiresPrescription == "\n")
+            {
+                arrangedPrescription = prod.getRequiresPrescription();
+            }
+            else
+            {
+                arrangedPrescription = checkPrescription(newRequiresPrescription, prod.getRequiresPrescription());
+            }
+            string newExpiryDate;
+
+            Product p(
+                code, newName,
+                newBrand,
+                newDescription,
+                arrangedPrice,
+                newDosageInstruction,
+                newCategory,
+                arrangedPrescription,
+                arrangedQuantity);
+
+            plist[index] = p;
+            fileHandler.updateFile(plist);
+            cout << "Product updated successfully";
         }
     }
     float checkPrice(string price, float prodPrice)
     {
-        try
+        float value;
+        stringstream ss(price);
+
+        if (ss >> value)
         {
-            return std::stof(price);
+            ss >> value;
+            return value;
         }
-        catch (const std::invalid_argument &e)
-        {
-            cout << "Invalid input. Please enter an integer." << &e << endl;
-            return prodPrice;
-        }
+
+        return prodPrice;
     }
     bool checkPrescription(string prescription, bool prodPrescription)
     {
-        if (prescription == "true")
+        if (prescription == "true" || prescription == "True" || prescription == "Y" || prescription == "y" || prescription == "yes" || prescription == "Yes")
         {
             return true;
         }
-        else if (prescription == "false")
+        else if (prescription == "false" || prescription == "False" || prescription == "N" || prescription == "n" || prescription == "no" || prescription == "No")
         {
             return false;
         }
         else
         {
-            cout << "Invalid input. Please enter true or false." << endl;
             return prodPrescription;
         }
     }
 
     int checkQuantity(string quantity, int prodQuantity)
     {
-        try
+
+        int value;
+        stringstream ss(quantity);
+
+        if (ss >> value)
         {
-            return std::stoi(quantity);
+            ss >> value;
+            return value;
         }
-        catch (const std::invalid_argument &e)
-        {
-            cout << "Invalid input. Please enter an integer." << &e << endl;
-            return prodQuantity;
-        }
+        return prodQuantity;
     }
 
     void deleteProduct(string code)
@@ -253,7 +300,8 @@ public:
         int index = -1;
         for (int i = 0; i < plist.size(); i++)
         {
-            if (plist[i].compareCode(code))
+            bool found = plist[i].compareCode(code);
+            if (found == 1 || found == true)
             {
                 index = i;
                 break;
