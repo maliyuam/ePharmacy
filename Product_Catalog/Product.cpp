@@ -231,9 +231,9 @@ public:
     {
         txt = txt.substr(1, txt.length() - 2);
         std::vector<std::string> tokens;
-        std::stringstream ss(txt);
-        std::string token;
-        while (std::getline(ss, token, ','))
+        stringstream ss(txt);
+        string token;
+        while (getline(ss, token, ','))
         {
             tokens.push_back(token);
         }
