@@ -1,1 +1,44 @@
-[{"DoctorName":"Grace","PrescriptionID":"PR1","Medications":[{"quantity":2,"processedStatus":false,"name":"Ibuprofen","id":"IB01H"}],"CustomerID":"Samiratu","Date":"2023-08-07"}]
+[
+    {
+        "DoctorName": "Grace",
+        "PrescriptionID": "PR1",
+        "Medications": [
+            {
+                "quantity": 2,
+                "processedStatus": false,
+                "name": "Ibuprofen",
+                "id": "IB01H"
+            }
+        ],
+        "CustomerID": "Samiratu",
+        "Date": "2023-08-07"
+    },
+    {
+        "DoctorName": "sdsfddfd",
+        "PrescriptionID": "sds",
+        "Medications": [
+            {
+                "quantity": 5,
+                "processedStatus": false,
+                "name": "Test",
+                "id": "jdfdf"
+            }
+        ],
+        "CustomerID": "sdsd",
+        "Date": "2023-08-11"
+    },
+    {
+        "DoctorName": "sds",
+        "PrescriptionID": "sds",
+        "Medications": [
+            {
+                "quantity": 4,
+                "processedStatus": false,
+                "name": "fdf",
+                "id": "erer"
+            }
+        ],
+        "CustomerID": "sdsd",
+        "Date": "2023-08-11"
+    }
+]

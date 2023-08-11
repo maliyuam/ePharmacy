@@ -28,6 +28,7 @@ public class Prescription {
 		this.doctorName = _doctorName;
 		this.medications = _medication;
 		this.date = LocalDate.now();
+				fileHandler = new FileHandler();
 
 	}
 
@@ -38,6 +39,7 @@ public class Prescription {
 		this.doctorName = _doctorName;
 		this.medications = _medication;
 		this.date = _date;
+				fileHandler = new FileHandler();
 	}
 
 	public String getPrescriptionID() {
@@ -150,8 +152,9 @@ public class Prescription {
 				JSONObject medication = (JSONObject) medObj;
 
 				String medicationID = (String) medication.get("id");
-				String defQuantity = (String) medication.get("quantity");
-				int quantity = Integer.parseInt(defQuantity);
+				Long defQuantity = (Long) medication.get("quantity");
+				int quantity = defQuantity.intValue();
+				
 				String medicationName = (String) medication.get("name");
 				
 				medications.add(new Medication(medicationID, medicationName, quantity));

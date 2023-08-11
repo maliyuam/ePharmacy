@@ -85,31 +85,7 @@ public class PrescriptionManagement {
 
                     ArrayList<Medication> medications = new ArrayList<>();
 
-                    // JSONArray jsonArray = fileHandler.readJSONArrayFromFile(false);
-                    // if (jsonArray == null) {
-                    //     System.out.println("No medications available");
-                    //     break;
-                    // } else {
-                    //     System.out.println(
-                    //             "---------------------------------------------------------------------------------------");
-                    //     System.out.println("|\t" + "\t\t  " + "\t\t\t\t");
-                    //     System.out.println("|\t\t" + "Available Medications" + "\t\t\t\t");
-                    //     System.out.println("|\t" + "\t\t  " + "\t\t\t\t");
-                    //     System.out.println(
-                    //             "---------------------------------------------------------------------------------------");
-                    //     System.out.println("|\t" + "Medication ID" + "\t\t" + "Medication Name" + "\t\t"
-                    //             + "Medication Price" + "\t\t" + "Medication Quantity" + "\t\t\t\t");
-                    //     System.out.println(
-                    //             "---------------------------------------------------------------------------------------");
-                    //     for (int i = 0; i < jsonArray.size(); i++) {
-                    //         JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                    //         System.out.println("|\t" + jsonObject.get("code") + "\t\t" + jsonObject.get("name") + "\t\t"
-                    //                 + jsonObject.get("price") + "\t\t" + jsonObject.get("quantity") + "\t\t"
-                    //                 + "\t\t\t\t");
-                    //     }
-
-                    // }
-                    displayMedications("products.json");
+                    displayMedications("src/products.json");
                     for (int i = 1; i <= numMedications; i++) {
                         String medicationName, medicationDetails, dosage, medicationID;
                         int quantity;
@@ -184,14 +160,15 @@ public class PrescriptionManagement {
                         System.out.println("******************************************************************");
 
                         for (Prescription p : prescriptions) {
-                            System.out.println("|\t  " + p.getPrescriptionID() + "\t\t" + p.getDoctorName() + "\t\t  "
+                            System.out.println("|\t " + p.getPrescriptionID() + "\t" + p.getDoctorName() + "\t\t  "
                                     + p.getCustomerID() + "\t\t" + p.getDate());
 
                             System.out.println("");
                             System.out.println("| MedicationID |  \tName    | \t Quantity | ");
                             for (Medication med : p.getMedications()) {
                                 System.out.println(
-                                        "|\t  " + med.getID() + "\t\t" + med.getName() + "\t\t " + med.getQuantity());
+                                        "|\t " + med.getID() + "\t\t" + med.getName() + "\t\t\t"
+                                                + med.getQuantity());
                             }
 
                             System.out.print("\n");
@@ -203,7 +180,6 @@ public class PrescriptionManagement {
 
                     break;
                 case 3:
-                    // TODO: Add code to get the ID of the prescription you want to delete
                     System.out.print("Enter the ID of the prescription you want to delete: ");
                     // String prescrID = reader.readLine();
                     String enteredId = reader.readLine();
