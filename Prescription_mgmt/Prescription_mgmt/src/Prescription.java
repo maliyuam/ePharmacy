@@ -43,7 +43,9 @@ public class Prescription {
 	public String getPrescriptionID() {
 		return this.prescriptionID;
 	}
-
+	public void setPrescriptionID(String id) {
+		this.prescriptionID = id;
+	}
 	public String getCustomerID() {
 		return this.customerID;
 	}
@@ -62,6 +64,9 @@ public class Prescription {
 
 	public ArrayList<Medication> getMedications() {
 		return this.medications;
+	}
+	public void setMedications(ArrayList<Medication> _medications) {
+		this.medications = _medications;
 	}
 
 	public LocalDate getDate() {
@@ -96,7 +101,7 @@ public class Prescription {
 	}
 
 	public void addPrescription() throws IOException, ParseException {
-		JSONArray existingPrescriptions = fileHandler.readJSONArrayFromFile();
+		JSONArray existingPrescriptions = fileHandler.readJSONArrayFromFile(true);
 		existingPrescriptions.add(
 				new Prescription(this.prescriptionID, this.customerID, this.doctorName, this.medications)
 						.getJSONObject());
@@ -109,7 +114,7 @@ public class Prescription {
 	public JSONArray getMedicationsOnPrescription(Prescription prescription) {
 		JSONArray jsonArray = new JSONArray();
 		try {
-			JSONArray existingPrescriptions = fileHandler.readJSONArrayFromFile();
+			JSONArray existingPrescriptions = fileHandler.readJSONArrayFromFile(true);
 			for (int i = 0; i < existingPrescriptions.size(); i++) {
 				JSONObject jsonObject = (JSONObject) existingPrescriptions.get(i);
 				String existingPrescriptionID = (String) jsonObject.get("prescriptionID");
@@ -126,7 +131,7 @@ public class Prescription {
 
 	public ArrayList<Prescription> viewPrescription() throws IOException, ParseException {
 
-		JSONArray jsonArray = fileHandler.readJSONArrayFromFile();
+		JSONArray jsonArray = fileHandler.readJSONArrayFromFile(true);
 		ArrayList<Prescription> prescriptions = new ArrayList<Prescription>();
 		for (Object obj : jsonArray) {
 			JSONObject jsonObject = (JSONObject) obj;
@@ -161,7 +166,7 @@ public class Prescription {
 
 	public void deletePrescription(
 			String prescriptionID) throws IOException, ParseException {
-		JSONArray existingPrescriptions = fileHandler.readJSONArrayFromFile();
+		JSONArray existingPrescriptions = fileHandler.readJSONArrayFromFile(true);
 		int indexToDelete = -1;
 		for (int i = 0; i < existingPrescriptions.size(); i++) {
 			JSONObject jsonObject = (JSONObject) existingPrescriptions.get(i);

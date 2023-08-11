@@ -1,3 +1,4 @@
+
 // import java.io.BufferedReader;
 // import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -11,23 +12,22 @@ import org.json.simple.parser.ParseException;
 public class FileHandler {
 
     private String filePath = "prescriptions.json";
+    private String productsPath = "products.json";
 
-    public JSONArray readJSONArrayFromFile() throws IOException, ParseException {
+    public JSONArray readJSONArrayFromFile(Boolean def) throws IOException, ParseException {
         JSONParser parser = new JSONParser();
-        try (FileReader fileReader = new FileReader(filePath)) {
+        try (FileReader fileReader = new FileReader(def ? filePath : productsPath)) {
             if (fileReader.read() == -1) {
                 return new JSONArray();
             } else {
                 fileReader.close();
-                return (JSONArray) parser.parse(new FileReader(filePath));
+                return (JSONArray) parser.parse(new FileReader(def ? filePath : productsPath));
             }
         } catch (IOException e) {
             System.err.println("Error while reading data from file: " + e.getMessage());
             return new JSONArray();
         }
     }
-
-    // TODO: Add missing code to be able to handle file
 
     public void writeJSONArrayToFile(JSONArray jsonArray) throws IOException {
         try (FileWriter fileWriter = new FileWriter(filePath)) {
