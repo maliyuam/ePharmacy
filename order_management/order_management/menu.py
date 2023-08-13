@@ -69,10 +69,25 @@ class Menu:
                 sld.handle_prescription_stats()
             case 3:
                 self.handle_user_purchases()
-            case 4: 
+            case 4:
                 self.handle_agent_sales()
             case 5:
                 self.handle_top_sales()
+        
+    def handle_add_to_cart(self)->None:
+        print("*******************************************")
+        print("Order Management and Analytics Menu")
+        print("[loc:.order.addToCart]")
+        print("*******************************************")
+        for i in range(self.stock.products):
+            print(i,self.stock.products[i])
+
+        choice = int(input("Enter your choice: "))
+        quantity = int(input("Enter quantity: "))
+        self.cart.add_to_cart(self.stock.products[choice],quantity)
+        
+
+
 
     # Your menu should have two main options with suboptions. Such as
     """
@@ -91,5 +106,6 @@ class Menu:
 
     * For each of the menu items, when necessary, display a success or error message to guide the user.
     """
+    
 
     # **CHALLENGE** (BONUS): Can you implement the menu to work as a USSD application? Implement and show your design
