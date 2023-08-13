@@ -225,15 +225,11 @@ public class PrescriptionManagement {
                 for (Object obj : jsonArray) {
                     JSONObject jsonObject = (JSONObject) obj;
 
-                    // TODO: Add code to get medication ID (it's named as code from
-                    // medications/products file), name, price and quantity
-                    // medication ID, name, price and quantity should be casted to String
+               
                     System.out.println("|\t" + jsonObject.get("code") + "\t\t" + jsonObject.get("name") + "\t\t"
                             + jsonObject.get("price") + "\t\t" + jsonObject.get("quantity") + "\t\t"
                             + "\t\t\t\t");
-                    // System.out.println("|\t" + medicationID + "\t\t" + medicationName + "\t\t " +
-                    // medicationPrice
-                    // + "\t\t\t " + medicationQuantity + "\t\t");
+           
 
                 }
                 System.out.println(

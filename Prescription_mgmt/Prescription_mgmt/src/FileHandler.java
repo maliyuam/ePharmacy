@@ -12,7 +12,7 @@ import org.json.simple.parser.ParseException;
 public class FileHandler {
 
     private String filePath = "src/prescriptions.json";
-    private String productsPath = "products.json";
+    private String productsPath = "src/products.json";
 
     public JSONArray readJSONArrayFromFile(Boolean def) throws IOException, ParseException {
         JSONParser parser = new JSONParser();
