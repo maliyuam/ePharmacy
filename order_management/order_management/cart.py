@@ -61,9 +61,18 @@ class Cart:
     def clear(self):
         """Clears up the cart.
         """
-        self.products.clear();
+        self.products.clear()
 
     @property
     def cost(self):
         """Returns the total cost of the cart"""
         # TODO: implement the function
+        productData = []
+        for product in self.products:
+            if product.code in self.products:
+                productData.append(product)
+
+        totalCost = 0
+        for product in productData:
+            totalCost += product.price * self.products[product.code]
+        return totalCost
