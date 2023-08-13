@@ -24,9 +24,15 @@ class Cart:
         Returns: None
         """
         # TODO: Make sure the quantity is valid (> 0 and <= to the quantity in the stock)
+        # iterate over the list of the
+
+        product = getProductByID(productCode)
+        if (product == None):
+            raise ValueError("Product code not found")
+
         if quantity <= 0:
             raise ValueError("Quantity must be greater than 0")
-        if quantity > self.stock.getProductByID(productCode):
+        if quantity > product.quantity:
             raise ValueError(
                 "Quantity must be less than or equal to the quantity in the stock")
         # TODO: If the product was already in the cart, increment the quantity
@@ -34,12 +40,12 @@ class Cart:
             self.products[productCode] = +quantity
         else:
             self.products[productCode] = quantity
-        # TODO: After the checks, add the product to the dictionary
 
     def __str__(self) -> str:
         """String representation of the cart
         """
         # TODO: Return a string representation of a cart that shows the products, their quantity, unit price, total price. And also the total price of the cart
+        return f""
         # Feel free to format it the way you want to
         return NotImplemented
 
@@ -47,10 +53,15 @@ class Cart:
         """
         Removes a specific product from the cart """
         # TODO: Removes a product from the cart. safely fail if the product code is not found
+        if code in self.products:
+            del self.products[code]
+        else:
+            raise ValueError("Product code not found")
 
     def clear(self):
         """Clears up the cart.
         """
+        self.products.clear();
 
     @property
     def cost(self):

@@ -1,3 +1,4 @@
+import json
 class Product:
     """Class representing a medication / product in the project.
 
@@ -14,7 +15,7 @@ class Product:
     """
     def __init__(
             self, 
-            code: int, 
+            code: str, 
             name: str, 
             brand: str,
             description: str,
@@ -32,6 +33,8 @@ class Product:
         self.price = price
         self.dosage_instruction = dosage_instruction
         self.requires_prescription = (requires_prescription != 0)
+    
+    
 
     def to_json(self) -> str:
         """Returns a valid JSON representation of the object
@@ -40,8 +43,9 @@ class Product:
 
         Returns: A JSON string.
         """
-        #TODO: Implement the function
-        return NotImplemented
+        json_str = json.dumps(self.__dict__)
+        return json_str
+         
 
     def __str__(self) -> str:
         return self.name
