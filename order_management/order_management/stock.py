@@ -22,9 +22,8 @@ class Stock:
         
         #TODO: Update the quantity
 
-    def getProductByID(self, id: int) -> Product:
+    def getProductByID(self, id: str) -> Product:
         """Gets a product by its ID
-
         Args:
             id: identifier of the product
         

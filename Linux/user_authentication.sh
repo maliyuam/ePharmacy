@@ -200,7 +200,7 @@ admin_menu() {
             ;;
         2)
             echo "Creating a Pharmasist"
-            register_credentials "pharmasist"
+            register_credentials "pharmacist"
             ;;
         *)
             echo "Invalid choice. Please try again."

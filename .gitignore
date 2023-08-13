@@ -5,4 +5,5 @@
 # add any file with the extension .exe and .out
 *.exe
 *.out
-data/.logged_in
+# ignore the folder named __pycache__
+__pycache__/

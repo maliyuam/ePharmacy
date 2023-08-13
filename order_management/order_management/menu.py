@@ -1,6 +1,8 @@
 from . import Stock, Cart, User, UserManagement, BookRecords, Wrapper, Prescription
 
 MSG_WRONG_INPUT = "Wrong input. Try again!"
+
+
 class Menu:
     """Represents the menu class for the project
 
@@ -12,20 +14,65 @@ class Menu:
         prescriptions_file: path to the file containing the prescriptions.
         stock_file: path to the file containing the stock data
     """
+
     def __init__(self, stock: Stock, profiles: UserManagement, pharmacist: User, records_file: str, prescriptions_file: str, stock_file: str) -> None:
         self.stock = stock
         self.profiles = profiles
         self.pharmacist = pharmacist
-        self.cart = Cart(stock = stock)
+        self.cart = Cart(stock=stock)
         # use the file instead of the object so that we can keep track
         self.records_file = records_file
         self.prescriptions_file = prescriptions_file
         self.stock_file = stock_file
 
-    #TODO: Create all the necessary functions/method to create and manage the menu using the
+    # TODO: Create all the necessary functions/method to create and manage the menu using the
     # available variables and all the attributes of the class
 
     # Make sure to dump the prescriptions, stock, and sale data after every sale.
+    def handle_orders(self) -> None:
+        print("*******************************************")
+        print("Order Management and Analytics Menu")
+        print("[loc:.order]")
+        print("*******************************************")
+        print("1. Add to cart")
+        print("2. Remove from cart")
+        print("3. Clear cart")
+        print("4. Checkout")
+        choice = int(input("Enter your choice: "))
+        match choice:
+            case 1:
+                self.handle_add_to_cart()
+            case 2:
+                self.handle_remove_from_cart()
+            case 3:
+                self.handle_clear_cart()
+            case 4:
+                self.handle_checkout()
+            case defaut:
+                print(MSG_WRONG_INPUT)
+
+    def handle_analytics(self) -> None:
+        print("*******************************************")
+        print("Order Management and Analytics Menu")
+        print("[loc:.analytics]")
+        print("*******************************************")
+        print("1. Total income from purchases")
+        print("2. Prescription statistics")
+        print("3. Purchases for a user")
+        print("4. Sales by an agent")
+        print("5. Top sales")
+        choice = int(input("Enter your choice: "))
+        match choice:
+            case 1:
+                self.handle_total_income()
+            case 2:
+                sld.handle_prescription_stats()
+            case 3:
+                self.handle_user_purchases()
+            case 4: 
+                self.handle_agent_sales()
+            case 5:
+                self.handle_top_sales()
 
     # Your menu should have two main options with suboptions. Such as
     """

@@ -25,7 +25,7 @@ if __name__ == '__main__':
     # get the logged in user
     pharmacist = profiles.get_logged_in_user()
     # make sure the logged in user is a pharmacist/salesperson
-    assert (pharmacist.role == 'salesperson' or pharmacist.role == 'phamasist'), 'You are not allowed to access this feature.'
+    assert (pharmacist.role == 'salesperson' or pharmacist.role == 'pharmacist'), 'You are not allowed to access this feature.'
 
     # load the resources that we need
     stock = Stock.load(stock_file)
@@ -51,9 +51,9 @@ if __name__ == '__main__':
         choice = int(input("Enter your choice: "))
         match choice:
             case 1:
-                menu.order_management()
+                menu.handle_orders()
             case 2:
-                menu.get_analytics()
+                menu.handle_analytics()
             case 0:
                 print("Exiting...")
                 exit()

@@ -48,5 +48,4 @@ class UserManagement:
             data_folder = os.path.abspath(
                 os.path.join(current_folder, '../../data'))
             login_creds = os.path.join(data_folder, '.logged_in')
-            print(users)
             return UserManagement(users=users, status_file=login_creds)
