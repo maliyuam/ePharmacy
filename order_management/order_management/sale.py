@@ -12,8 +12,9 @@ class Sale:
         salesperson: username of the pharmacist making the sale (string)
         prescriptionID: identifier of the prescription used in the sale
     """
-    def __init__(self, id: str, name: str, quantity: int, 
-                 price: float, purchase_price: float, timestamp: float, 
+
+    def __init__(self, id: str, name: str, quantity: int,
+                 price: float, purchase_price: float, timestamp: float,
                  customerID: str, salesperson: str, prescriptionID: str) -> None:
         self.id = id
         self.name = name
@@ -32,7 +33,6 @@ class Sale:
 
         Returns: A string
         """
-        #TODO: Return a string that shows the product sold, its unit price
+        # TODO: Return a string that shows the product sold, its unit price
         # the quantity, timestamp, and the total cost in a nice way.
-        pass
-
+        return f"{self.name} was sold at {self.price} per unit. {self.quantity} units were sold at {self.timestamp} for a total of {self.purchase_price}."
