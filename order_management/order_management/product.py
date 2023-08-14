@@ -69,5 +69,6 @@ class Product:
                                prescription['category'])
         return None
 
+
     def __str__(self) -> str:
         return self.name
