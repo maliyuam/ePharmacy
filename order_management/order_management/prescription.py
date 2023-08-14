@@ -25,6 +25,7 @@ class Prescription:
         data_folder = os.path.abspath(
             os.path.join(current_folder, '../../data'))
         self.prescriptionPath = os.path.join(data_folder, 'prescriptions.json')
+        self.Date = Date
 
     def medecineInPrescription(self, product: Product, quantity: int) -> bool:
         """Verifies if a medecine with the specified quantity is included in a prescription
@@ -94,6 +95,20 @@ class Prescription:
         # TODO: Save the updated object
         with (open(outfile, 'w')) as file:
             json.dump(data, file)
+    @staticmethod
+    def fromJsonData(self, data:str) -> self:
+        """Loads all prescriptions from the file
+        Returns: A list of prescription objects
+        """
+        return Prescription(
+            DoctorName=data['DoctorName'],
+            PrescriptionID=data['PrescriptionID'],
+            Medications=data['Medications'],
+            CustomerID=data['CustomerID'],
+            Date=data['Date']
+        )
+
+
 
     @classmethod
     def get(cls, infile: str, id: str):
