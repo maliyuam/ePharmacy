@@ -45,9 +45,16 @@ class Cart:
         """String representation of the cart
         """
         # TODO: Return a string representation of a cart that shows the products, their quantity, unit price, total price. And also the total price of the cart
-        return f""
+        
+        productData = f""
+        for product in self.stock.products:
+            if product.code in self.products:
+                productData += f"{product.name} - {product.price} - {self.products[product.code]} - {product.price * self.products[product.code]}\n"
+        return productData
+        
+            
+
         # Feel free to format it the way you want to
-        return NotImplemented
 
     def remove(self, code):
         """

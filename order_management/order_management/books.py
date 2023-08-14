@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from datetime import datetime
+import os
 
 from typing import List
 from .sale import sale
@@ -21,6 +22,7 @@ class BookRecords:
         data_folder = os.path.abspath(
             os.path.join(current_folder, '../../data'))
         self.prescriptionPath = os.path.join(data_folder, 'prescriptions.json')
+        self.salesPath = os.path.join(data_folder, 'sales.json')
 
     def __str__(self) -> str:
         """Returns a string representation of a record.
@@ -95,6 +97,11 @@ class BookRecords:
         # TODO: Query the transactions to the `transactions` list below
         transactions = None
 
+        formattedData = []
+        transactions = []
+        for transaction in self.transactions:
+            if (transaction.customer == customerID):
+                transactions.append(transaction)
         return BookRecords(transactions).__str__()
 
     def salesByAgent(self, salesperson: str):
@@ -108,8 +115,11 @@ class BookRecords:
         """
         # TODO: Query the transactions to the `transactions` list below
         transactions = None
-
-        # return the string representation
+        formattedData = []
+        transactions = []
+        for transaction in self.transactions:
+            if (transaction.salesperson == salesperson):
+                transactions.append(transaction)
         return BookRecords(transactions).__str__()
 
     def topNSales(self, start: datetime = datetime.strptime('1970-01-02', '%Y-%m-%d'), end: datetime = datetime.now(), n=10) -> str:
@@ -125,6 +135,13 @@ class BookRecords:
         """
         # TODO: Query the top transactions and save them to the variable `transactions` below
         transactions = None
+        formattedData = []
+        transactions = []
+        for transaction in self.transactions:
+            if (transaction.date >= start and transaction.date <= end):
+                transactions.append(transaction)
+        transactions = sorted(transactions, key=lambda x: x.purchase_price)
+        transactions = transactions[:n]
 
         # return the string representation of the transactions.
         return BookRecords(transactions).__str__()
@@ -136,7 +153,14 @@ class BookRecords:
 
         Returns: A floating number representing the total price
         """
+
         return sum([transaction.purchase_price for transaction in self.transactions])
+    # create a method that gets thew data from the sales.json file
+
+    def getSalesData(self):
+        with open(self.salesPath, 'r') as f:
+            data = json.load(f)
+            return data
 
     @classmethod
     def load(cls, infile: str) -> BookRecords:
@@ -147,5 +171,11 @@ class BookRecords:
         Returns: A new object with the transactions in the file
         """
         # TODO: Implement the function. Make sure to handle the cases where
-        # the file does not exist.
-        return NotImplemented
+        if (not os.path.exists(infile)):
+            raise FileNotFoundError(f"File {infile} does not exist")
+        with open(self.salesPath, 'r') as f:
+            data = json.load(f)
+        formattedData = []
+        for transaction in data:
+            formattedData.append(Sale.fromJsonData(transaction))
+        return BookRecords(formattedData)

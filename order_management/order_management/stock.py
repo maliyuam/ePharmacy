@@ -23,10 +23,9 @@ class Stock:
         # TODO: Make sure the product exists, and that by making the change, the value is still >= 0
         for product in self.products:
             if product.code == id:
-                product.quantity += change
+                product.quantity -= change
                 return
-
-        # TODO: Update the quantity
+        raise Exception("Product not found")
 
     def getProductByID(self, id: str) -> Product:
         """Gets a product by its ID

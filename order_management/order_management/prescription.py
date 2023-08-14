@@ -66,14 +66,19 @@ class Prescription:
                 medication['ProcessedStatus'] = True
                 break
         # performing the reading of the prescription file and performing tha update th change the value of the processed status to true
+        if not os.path.exists(self.prescriptionPath):
+            raise FileNotFoundError("Prescription file not found")
         with (open(self.prescriptionPath, 'r')) as file:
             data = json.load(file)
             for prescription in data:
                 if prescription['PrescriptionID'] == self.PrescriptionID:
                     prescription = prescription
                     break
+        if not os.path.exists(self.prescriptionPath):
+            raise FileNotFoundError("Prescription file not found")
         with (open(self.prescriptionPath, 'w')) as file:
             json.dump(data, file)
+    
 
     def dump(self, outfile: str):
         """Dumps the updated prescription to the specified file
@@ -93,10 +98,25 @@ class Prescription:
 
         # TODO: Update the prescription that is being edited in the loaded data
         # TODO: Save the updated object
+        if (not os.path.exists(outfile)):
+            raise FileNotFoundError("Prescription file not found")
         with (open(outfile, 'w')) as file:
             json.dump(data, file)
+
+    def toJsonData(self) -> Dict[str, Union[str, List[Dict[str, Union[int, str, bool]]]]]:
+        """Converts the prescription object to a dictionary
+
+        Returns: A dictionary representing the prescription object
+        """
+        return {
+            'DoctorName': self.DoctorName,
+            'PrescriptionID': self.PrescriptionID,
+            'Medications': self.Medications,
+            'CustomerID': self.CustomerID,
+            'Date': self.Date
+        }
     @staticmethod
-    def fromJsonData(self, data:str) -> self:
+    def fromJsonData(self, data: str) -> self:
         """Loads all prescriptions from the file
         Returns: A list of prescription objects
         """
@@ -107,7 +127,6 @@ class Prescription:
             CustomerID=data['CustomerID'],
             Date=data['Date']
         )
-
 
 
     @classmethod
@@ -121,6 +140,8 @@ class Prescription:
         Returns: A prescription object as a dictionary
         """
         # TODO: Load the file and find the object with the relevant ID
+        if not os.path.exists(infile):
+            return None
         with (open(infile, 'r')) as file:
             data = json.load(file)
             prescriptions = [p for p in data if p['PrescriptionID'] == id]
