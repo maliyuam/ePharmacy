@@ -78,7 +78,8 @@ class BookRecords:
                             product = Product.getProductByID(medicationId)
                             if (product != None):
                                 total += product.price
-                            formatted += f"|{prescription.id:<20}{total:<20}|\n"
+                            else:
+                                formatted += f"|{prescription.id:<20}{total:<20}|\n"
                     return formatted
                     print(formatted)
 
