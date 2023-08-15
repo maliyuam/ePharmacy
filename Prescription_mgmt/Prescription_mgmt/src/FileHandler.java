@@ -11,8 +11,8 @@ import org.json.simple.parser.ParseException;
 
 public class FileHandler {
 
-    private String filePath = "src/prescriptions.json";
-    private String productsPath = "src/products.json";
+    private String filePath = "Prescription_mgmt/src/prescriptions.json";
+    private String productsPath = "Prescription_mgmt/src/products.json";
 
     public JSONArray readJSONArrayFromFile(Boolean def) throws IOException, ParseException {
         JSONParser parser = new JSONParser();

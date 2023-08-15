@@ -1,3 +1,4 @@
+import uuid
 class Sale:
     """Class repreenting a sale that was successfully committed to the records.
 
@@ -46,3 +47,7 @@ class Sale:
         Returns: A Sale object
         """
         return Sale(data['id'], data['name'], data['quantity'], data['price'], data['purchase_price'], data['timestamp'], data['customerID'], data['salesperson'], data['prescriptionID'])
+    @classmethod
+    def create(cls,name:str,quantity:int, price:float, purchase_price:float, timestamp:float, customerID:str, salesperson:str, prescriptionID:str):
+        id = "SL-" + str(uuid.uuid4())
+        return cls(id,name,quantity,price,purchase_price,timestamp,customerID,salesperson,prescriptionID)

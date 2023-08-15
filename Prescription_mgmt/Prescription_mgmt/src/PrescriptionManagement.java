@@ -85,7 +85,7 @@ public class PrescriptionManagement {
 
                     ArrayList<Medication> medications = new ArrayList<>();
 
-                    displayMedications("src/products.json");
+                    displayMedications("Prescription_mgmt/src/products.json");
                     for (int i = 1; i <= numMedications; i++) {
                         String medicationName, medicationDetails, dosage, medicationID;
                         int quantity;

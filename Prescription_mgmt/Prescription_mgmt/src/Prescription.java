@@ -174,7 +174,11 @@ public class Prescription {
 		for (int i = 0; i < existingPrescriptions.size(); i++) {
 			JSONObject jsonObject = (JSONObject) existingPrescriptions.get(i);
 			String existingPrescriptionID = (String) jsonObject.get("PrescriptionID");
-			if (existingPrescriptionID == prescriptionID) {
+			System.out.println("existingPrescriptionID: " + existingPrescriptionID);
+			System.out.println("prescriptionID: " + prescriptionID);
+			System.out.println("existingPrescriptionID == prescriptionID: " + existingPrescriptionID.equals(prescriptionID));
+			if (existingPrescriptionID.equals(prescriptionID)) {
+				System.out.println("found");
 				indexToDelete = i;
 				break;
 			}
