@@ -165,11 +165,25 @@ class Menu:
         for i, user in enumerate(self.profiles.users):
             print(user.__str__())
             print("-"*120)
-        choice = int(input("Enter the corresponding user ID: "))
-        user = self.profiles.users[choice-1]
-        prescription = Prescription.get(
-            infile=self.prescriptions_file, id=user.username)
-        self.wrapper.checkout(self.cart, user.username, prescription)
+        try:
+
+            choice = int(input("Enter the corresponding user ID: "))
+            user = self.profiles.users[choice-1]
+            prescription = Prescription.get(
+                infile=self.prescriptions_file, id=user.username)
+            self.wrapper.checkout(self.cart, user.username, prescription)
+            self.cart.clear()
+            os.system("cls")
+            print("Checkout successful...")
+        except Exception as e:
+            print(e)
+
+    def handle_total_income(self) -> None:
+        print("*******************************************")
+        print("Order Management and Analytics Menu")
+        print("[loc:.analytics.totalIncome]")
+        print("*******************************************")
+        print("Total income:", self.records_file)
 
     # Your menu should have two main options with suboptions. Such as
     """

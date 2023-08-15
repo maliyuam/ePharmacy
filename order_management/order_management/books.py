@@ -35,7 +35,7 @@ class BookRecords:
         # TODO: In the format below, return a representation of the records
         # |      # | Date                | Customer   | Medication | Quantity | Purchase Price | Prescription |
         # |      1 | 2023-06-03 21:23:25 | doe        | Quinine    |        3 |       1400 RWF | PHA1         |
-        formatted = f"|{'Date':<20}{'Customer':<20}{'Medication':<20}{'Quantity':<20}{'Purchase Price':<20}{'Prescription':<20}|\n"
+        formatted = f"|{'Date':^20} | {'Customer':^20} | {'Medication':^20} | {'Quantity':^20} | {'Purchase Price':^20}{'Prescription':^20}|\n"
         for i, transaction in enumerate(self.transactions):
             formatted += f"|{i:<10}{transaction.date:<10}{transaction.customer:<10}{transaction.medication:<10}{transaction.quantity:<10}{transaction.purchase_price:<10}{transaction.prescriptionID:<10}|\n"
         return formatted
