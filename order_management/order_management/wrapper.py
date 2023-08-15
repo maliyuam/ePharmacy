@@ -81,8 +81,8 @@ class Wrapper:
 
         self.stock.products = updated_products
 
+        self.handle_quantity_change(updated_products)
 
-            
         # TODO: Append the list to the current sales
         self.sales = salesData
 
@@ -134,14 +134,13 @@ class Wrapper:
             with open(outfile, "w") as f:
                 json.dump([sale.toJsonData() for sale in sales], f, indent=4)
 
-    def handle_quantity_change(self, products: List[Product], quantity: int):
+    def handle_quantity_change(self, products: List[Product]):
         """Handles the quantity change of a product
 
         Args:
             product: the product to update
             quantity: the new quantity
         """
-        with open(self.products_file,"w") as f:
-            json.dump([product.toJsonData() for product in products], f, indent=4)
-
-
+        with open(self.products_file, "w") as f:
+            json.dump([product.toJsonData()
+                      for product in products], f, indent=4)
