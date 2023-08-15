@@ -26,7 +26,7 @@ class Cart:
         # TODO: Make sure the quantity is valid (> 0 and <= to the quantity in the stock)
         # iterate over the list of the
 
-        product = getProductByID(productCode)
+        product = Product.getProductByID(productCode)
         if (product == None):
             raise ValueError("Product code not found")
 
@@ -36,7 +36,7 @@ class Cart:
             raise ValueError(
                 "Quantity must be less than or equal to the quantity in the stock")
         # TODO: If the product was already in the cart, increment the quantity
-        if productCode in self.products:
+        if productCode in self.products.keys():
             self.products[productCode] = +quantity
         else:
             self.products[productCode] = quantity
@@ -47,12 +47,11 @@ class Cart:
         # TODO: Return a string representation of a cart that shows the products, their quantity, unit price, total price. And also the total price of the cart
         
         productData = f""
-        for product in self.stock.products:
-            if product.code in self.products:
-                productData += f"{product.name} - {product.price} - {self.products[product.code]} - {product.price * self.products[product.code]}\n"
+        for i,product in enumerate(self.stock.products):
+            keys = list(self.products.keys())
+            if product.code in self.products.keys():
+                productData += f"{product.code} - Name:{product.name} - Unit Price:{product.price} - Brand:{product.brand} Quantity:{self.products[product.code]} - Total:{product.price * self.products[product.code]}\n"
         return productData
-        
-            
 
         # Feel free to format it the way you want to
 
@@ -60,7 +59,7 @@ class Cart:
         """
         Removes a specific product from the cart """
         # TODO: Removes a product from the cart. safely fail if the product code is not found
-        if code in self.products:
+        if code in self.products.keys():
             del self.products[code]
         else:
             raise ValueError("Product code not found")

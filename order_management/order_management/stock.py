@@ -54,7 +54,6 @@ class Stock:
         """
         with open(infile, 'r') as f:
             data = json.load(f)
-            print(data)
             products = [
                 Product(
                     code=product['code'],
@@ -64,7 +63,6 @@ class Stock:
                     quantity=product['quantity'],
                     price=product['price'],
                     requires_prescription=product['requires_prescription'],
-                    brand=product['brand'],
                     category=product['category'],
                     dosage_instruction=product['dosage_instruction'],
 

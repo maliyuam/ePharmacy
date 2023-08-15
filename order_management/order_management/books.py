@@ -5,7 +5,7 @@ from datetime import datetime
 import os
 
 from typing import List
-from .sale import sale
+from .sale import Sale
 from .prescription import Prescription
 
 
@@ -173,7 +173,7 @@ class BookRecords:
         # TODO: Implement the function. Make sure to handle the cases where
         if (not os.path.exists(infile)):
             raise FileNotFoundError(f"File {infile} does not exist")
-        with open(self.salesPath, 'r') as f:
+        with open(infile, 'r') as f:
             data = json.load(f)
         formattedData = []
         for transaction in data:

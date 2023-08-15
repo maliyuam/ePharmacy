@@ -1,5 +1,5 @@
 from . import Stock, Cart, User, UserManagement, BookRecords, Wrapper, Prescription
-
+import os
 MSG_WRONG_INPUT = "Wrong input. Try again!"
 
 
@@ -30,26 +30,35 @@ class Menu:
 
     # Make sure to dump the prescriptions, stock, and sale data after every sale.
     def handle_orders(self) -> None:
-        print("*******************************************")
-        print("Order Management and Analytics Menu")
-        print("[loc:.order]")
-        print("*******************************************")
-        print("1. Add to cart")
-        print("2. Remove from cart")
-        print("3. Clear cart")
-        print("4. Checkout")
-        choice = int(input("Enter your choice: "))
-        match choice:
-            case 1:
-                self.handle_add_to_cart()
-            case 2:
-                self.handle_remove_from_cart()
-            case 3:
-                self.handle_clear_cart()
-            case 4:
-                self.handle_checkout()
-            case defaut:
-                print(MSG_WRONG_INPUT)
+        while True:
+            print("*******************************************")
+            print("Order Management and Analytics Menu")
+            print("[loc:.order]")
+            print("*******************************************")
+            print("1. Add to cart")
+            print("2. Remove from cart")
+            print("3. Clear cart")
+            print("4. Checkout")
+            print("5. Back")
+            choice = int(input("Enter your choice: "))
+            os.system("cls")
+
+            match choice:
+                case 1:
+                    self.handle_add_to_cart()
+                case 2:
+                    self.handle_remove_from_cart()
+                case 3:
+                    print("")
+                    # self.handle_clear_cart()
+                case 4:
+                    print("")
+                    # self.handle_checkout()
+                case 5:
+                    os.system("cls")
+                    break
+                case defaut:
+                    print(MSG_WRONG_INPUT)
 
     def handle_analytics(self) -> None:
         print("*******************************************")
@@ -62,6 +71,7 @@ class Menu:
         print("4. Sales by an agent")
         print("5. Top sales")
         choice = int(input("Enter your choice: "))
+        os.system("cls")
         match choice:
             case 1:
                 self.handle_total_income()
@@ -73,21 +83,76 @@ class Menu:
                 self.handle_agent_sales()
             case 5:
                 self.handle_top_sales()
-        
-    def handle_add_to_cart(self)->None:
+
+    def handle_add_to_cart(self) -> None:
         print("*******************************************")
         print("Order Management and Analytics Menu")
         print("[loc:.order.addToCart]")
         print("*******************************************")
-        for i in range(self.stock.products):
-            print(i,self.stock.products[i])
+        print("-"*176)
+        print(f"|{'ID':<5}|{'Name':^20}|{'Brand':^20}|{'Description':^20}|{'Quantity':^20}|{'Price':^20}|{'Dosage':^20}|{'Prescription':^20}| {'Category':^20}|")
+        print("-"*176)
+        for i in range(len(self.stock.products)):
+            print("|", i+1, " ", self.stock.products[i])
+            print("_"*176)
 
         choice = int(input("Enter your choice: "))
         quantity = int(input("Enter quantity: "))
-        self.cart.add_to_cart(self.stock.products[choice],quantity)
-        
+        if quantity > self.stock.products[choice-1].quantity:
+            print("Insufficient stock")
+            os.system("cls")
+            return
+        try:
+            self.cart.add(self.stock.products[choice-1].code, quantity)
+            print("Added to cart...")
+            os.system("cls")
+        except Exception as e:
+            print(e)
+        except ValueError as e:
+            print(e)
 
+    def handle_remove_from_cart(self) -> None:
+        print("*******************************************")
+        print("Order Management and Analytics Menu")
+        print("[loc:.order.removeFromCart]")
+        print("*******************************************")
+        print("-"*80)
+        print(self.cart.__str__())
+        print("-"*80)
+        choice = str(input("Enter the corresponding product code: "))
+        try:
+            self.cart.remove(choice)
+            os.system("cls")
+            print("Removed from cart...")
+            print("Cart Content:", self.cart)
+        except Exception as e:
+            print(e)
+        except ValueError as e:
+            print(e)
 
+    def handle_cart_clear(self) -> None:
+        print("*******************************************")
+        print("Order Management and Analytics Menu")
+        print("[loc:.order.clearCart]")
+        print("*******************************************")
+        print("Are you sure you want to clear the cart?")
+        print("1. Yes")
+        print("2. No")
+        print("3. Back")
+        choice = int(input("Enter your choice: "))
+        if choice == 1:
+            self.cart.clear()
+            print("Cart cleared...")
+            os.system("cls")
+        elif choice == 2:
+            os.system("cls")
+            return
+        elif choice == 3:
+            os.system("cls")
+            return
+        else:
+            os.system("cls")
+            print(MSG_WRONG_INPUT)
 
     # Your menu should have two main options with suboptions. Such as
     """
@@ -106,6 +171,5 @@ class Menu:
 
     * For each of the menu items, when necessary, display a success or error message to guide the user.
     """
-    
 
     # **CHALLENGE** (BONUS): Can you implement the menu to work as a USSD application? Implement and show your design

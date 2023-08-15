@@ -116,7 +116,7 @@ class Prescription:
             'Date': self.Date
         }
     @staticmethod
-    def fromJsonData(self, data: str) -> self:
+    def fromJsonData(self, data: str) :
         """Loads all prescriptions from the file
         Returns: A list of prescription objects
         """

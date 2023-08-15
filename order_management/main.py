@@ -6,7 +6,8 @@ from order_management import (
     Cart,
     Wrapper,
     Menu,
-    BookRecords
+    BookRecords,
+    
 )
 
 if __name__ == '__main__':
@@ -47,8 +48,8 @@ if __name__ == '__main__':
         print("1. Order Management")
         print("2. Get Analytics")
         print("0. Back")
-      
         choice = int(input("Enter your choice: "))
+        os.system('cls')
         match choice:
             case 1:
                 menu.handle_orders()

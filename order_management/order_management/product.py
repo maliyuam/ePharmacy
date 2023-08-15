@@ -49,7 +49,7 @@ class Product:
         return json_str
 
     @staticmethod
-    def getProductByID(id: str) -> Product | None:
+    def getProductByID(id: str) :
         current_folder = os.path.dirname(os.path.abspath(__file__))
         data_folder = os.path.abspath(
             os.path.join(current_folder, '../../data'))
@@ -71,4 +71,4 @@ class Product:
 
 
     def __str__(self) -> str:
-        return self.name
+        return f"|{self.name:^20}| {self.brand:^18} | {self.description:^18} | {self.quantity:^18} | {self.price:^18} | {self.dosage_instruction:^18} | {self.requires_prescription:^18} | {self.category:^19} |"
