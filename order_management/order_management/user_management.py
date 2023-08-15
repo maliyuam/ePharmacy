@@ -18,8 +18,11 @@ class UserManagement:
         self.status_file = status_file
 
     def get_logged_in_user(self) -> User:
+        if(not os.path.exists(self.status_file)):
+            raise FileNotFoundError("File does not exist")
         with open(self.status_file, 'r') as f:
             username = f.read().strip()
+
             user = self.get_user_details(username)
             if user is None:
                 raise Exception("User is not logged in")

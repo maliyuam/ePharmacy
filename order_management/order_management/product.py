@@ -72,3 +72,5 @@ class Product:
 
     def __str__(self) -> str:
         return f"|{self.name:^20}| {self.brand:^18} | {self.description:^18} | {self.quantity:^18} | {self.price:^18} | {self.dosage_instruction:^18} | {self.requires_prescription:^18} | {self.category:^19} |"
+# for i in range(leng(list)):
+# 0,1,2,3,4

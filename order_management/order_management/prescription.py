@@ -144,7 +144,7 @@ class Prescription:
             return None
         with (open(infile, 'r')) as file:
             data = json.load(file)
-            prescriptions = [p for p in data if p['PrescriptionID'] == id]
+            prescriptions = [p for p in data if p['CustomerID'] == id]
             if len(prescriptions) > 0:
                 return prescriptions[0]
         return None

@@ -1,4 +1,4 @@
-from . import Stock, Cart, User, UserManagement, BookRecords, Wrapper, Prescription
+from . import Stock, Cart, User, UserManagement, BookRecords, Wrapper, Prescription, Wrapper
 import os
 MSG_WRONG_INPUT = "Wrong input. Try again!"
 
@@ -15,7 +15,7 @@ class Menu:
         stock_file: path to the file containing the stock data
     """
 
-    def __init__(self, stock: Stock, profiles: UserManagement, pharmacist: User, records_file: str, prescriptions_file: str, stock_file: str) -> None:
+    def __init__(self, stock: Stock, profiles: UserManagement, pharmacist: User, records_file: str, prescriptions_file: str, stock_file: str, wrapper: Wrapper) -> None:
         self.stock = stock
         self.profiles = profiles
         self.pharmacist = pharmacist
@@ -24,6 +24,7 @@ class Menu:
         self.records_file = records_file
         self.prescriptions_file = prescriptions_file
         self.stock_file = stock_file
+        self.wrapper = wrapper
 
     # TODO: Create all the necessary functions/method to create and manage the menu using the
     # available variables and all the attributes of the class
@@ -49,11 +50,9 @@ class Menu:
                 case 2:
                     self.handle_remove_from_cart()
                 case 3:
-                    print("")
-                    # self.handle_clear_cart()
+                    self.handle_cart_clear()  # self.handle_clear_cart()
                 case 4:
-                    print("")
-                    # self.handle_checkout()
+                    self.handle_checkout()
                 case 5:
                     os.system("cls")
                     break
@@ -153,6 +152,24 @@ class Menu:
         else:
             os.system("cls")
             print(MSG_WRONG_INPUT)
+
+    def handle_checkout(self) -> None:
+        print("*******************************************")
+        print("Order Management and Analytics Menu")
+        print("[loc:.order.checkout]")
+        print("*******************************************")
+        # will display the users
+        print(
+            f"|{'ID':^5} | {'Username':^20} | {'Full Name':^20} | {'Role':^20} | {'Logged in':^20}|")
+        print("-"*120)
+        for i, user in enumerate(self.profiles.users):
+            print(user.__str__())
+            print("-"*120)
+        choice = int(input("Enter the corresponding user ID: "))
+        user = self.profiles.users[choice-1]
+        prescription = Prescription.get(
+            infile=self.prescriptions_file, id=user.username)
+        self.wrapper.checkout(self.cart, user.username, prescription)
 
     # Your menu should have two main options with suboptions. Such as
     """
