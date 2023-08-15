@@ -27,8 +27,10 @@ class Wrapper:
         current_folder = os.path.dirname(os.path.abspath(__file__))
         data_folder = os.path.abspath(
             os.path.join(current_folder, '../../data'))
-        self.prescription_file = os.path.join(data_folder, 'prescriptions.json')
+        self.prescription_file = os.path.join(
+            data_folder, 'prescriptions.json')
         self.sale_file = os.path.join(data_folder, 'sales.json')
+        self.products_file = os.path.join(data_folder, 'products.json')
 
     def checkout(self, cart: Cart, customerID: str, prescription: Prescription = None):
         """Handles the checkout procedure of the program.
@@ -43,7 +45,7 @@ class Wrapper:
         # (i.e., (1) there is a prescription that (2) matches the customer's ID, and (3) contains the medication
         # in the specified quantity).
         # Raise an exception if either of those conditions is unmet.
-        keys = listc(cart.products.keys())
+        keys = list(cart.products.keys())
         # fetch medications fron the keys
         products = []
         for i, product in enumerate(cart.stock.products):
@@ -65,18 +67,31 @@ class Wrapper:
         # "customerID": <customer username>, "salesperson": <pharmacist username>}
         # and append it to the sales list.
         salesData = []
-        for i, product in enumerate(cart.stock.products):
-            salesData.append(Sale.create(product.name, product.quantity, product.price, product.price * product.quantity,
+
+        for i, product in enumerate(products):
+            salesData.append(Sale.create(product.name, cart.products[product.code], product.price, product.price * cart.products[product.code],
                              datetime.now().strftime("%d/%m/%Y %H:%M:%S"), customerID, self.agentID, prescription.PrescriptionID))
+        updated_products = []
+        for item in cart.stock:
+            if item.code in keys:
+                item.quantity -= cart.products[item.code]
+                updated_products.append(item)
+            else:
+                updated_products.append(item)
+
+        self.stock.products = updated_products
+
+
+            
         # TODO: Append the list to the current sales
         self.sales = salesData
+
         # TODO: Make sure that the sold products are marked as complete in the prescriptions.
         # for i, product in enumerate(cart.stock.products):
         if prescription != None:
             for i, product in enumerate(prescription.Medications):
                 prescription.Medications[i]["ProcessedStatus"] = True
             self.dump(self.prescription_file, prescription)
-          
 
     def dump(self, outfile: str, prescription: Prescription = None):
         """Dumps the current sales data to a file
@@ -103,4 +118,30 @@ class Wrapper:
                           for prescription in prescriptions], f, indent=4)
 
         # TODO: Update the content by appending the new entries to it, and save to the file
-    
+    def update_sales(self, outfile: str):
+        """Dumps the current sales data to a file
+
+        Args:
+            outfile: the path to the output file
+        """
+        with open(outfile, "r") as f:
+            content = json.load(f)
+            sales = []
+            for item in content:
+                sales.append(Sale.fromJsonData(item))
+            for item in self.sales:
+                sales.append(item)
+            with open(outfile, "w") as f:
+                json.dump([sale.toJsonData() for sale in sales], f, indent=4)
+
+    def handle_quantity_change(self, products: List[Product], quantity: int):
+        """Handles the quantity change of a product
+
+        Args:
+            product: the product to update
+            quantity: the new quantity
+        """
+        with open(self.products_file,"w") as f:
+            json.dump([product.toJsonData() for product in products], f, indent=4)
+
+
