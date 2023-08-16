@@ -54,6 +54,7 @@ class Stock:
         """
         with open(infile, 'r') as f:
             data = json.load(f)
+            # print(data)
             products = [
                 Product(
                     code=product['code'],

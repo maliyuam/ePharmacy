@@ -1,8 +1,10 @@
 from .cart import Cart
 from .stock import Stock
 from .product import Product
+from .sale import Sale
 from .prescription import Prescription
 from datetime import datetime
+from typing import List
 
 import os
 import json
@@ -52,6 +54,7 @@ class Wrapper:
             if product.code in keys:
                 products.append(product)
         for i, item in enumerate(products):
+            print(item.requires_prescription)
             if item.requires_prescription:
                 if prescription == None:
                     raise Exception(
@@ -70,9 +73,9 @@ class Wrapper:
 
         for i, product in enumerate(products):
             salesData.append(Sale.create(product.name, cart.products[product.code], product.price, product.price * cart.products[product.code],
-                             datetime.now().strftime("%d/%m/%Y %H:%M:%S"), customerID, self.agentID, prescription.PrescriptionID))
+                             datetime.now().strftime("%d/%m/%Y %H:%M:%S"), customerID, self.agentID, prescription.PrescriptionID if prescription != None else ""))
         updated_products = []
-        for item in cart.stock:
+        for item in cart.stock.products:
             if item.code in keys:
                 item.quantity -= cart.products[item.code]
                 updated_products.append(item)
@@ -85,6 +88,7 @@ class Wrapper:
 
         # TODO: Append the list to the current sales
         self.sales = salesData
+        self.update_sales(self.sale_file)
 
         # TODO: Make sure that the sold products are marked as complete in the prescriptions.
         # for i, product in enumerate(cart.stock.products):
@@ -142,5 +146,5 @@ class Wrapper:
             quantity: the new quantity
         """
         with open(self.products_file, "w") as f:
-            json.dump([product.toJsonData()
+            json.dump([product.to_json()
                       for product in products], f, indent=4)

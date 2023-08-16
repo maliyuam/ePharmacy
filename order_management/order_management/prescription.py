@@ -2,6 +2,7 @@ import json
 
 from typing import List, Dict, Union
 from .product import Product
+import os
 
 
 class Prescription:

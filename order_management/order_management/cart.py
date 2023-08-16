@@ -2,6 +2,7 @@ from .product import Product
 from .stock import Stock
 
 
+
 class Cart:
     """Represents a cart with a list of products and quantity
 
@@ -37,7 +38,7 @@ class Cart:
                 "Quantity must be less than or equal to the quantity in the stock")
         # TODO: If the product was already in the cart, increment the quantity
         if productCode in self.products.keys():
-            self.products[productCode] = +quantity
+            self.products[productCode] += quantity
         else:
             self.products[productCode] = quantity
 
@@ -59,7 +60,9 @@ class Cart:
         """
         Removes a specific product from the cart """
         # TODO: Removes a product from the cart. safely fail if the product code is not found
-        if code in self.products.keys():
+        keys = list(self.products.keys())
+        print(keys)
+        if code in self.products.keys():    
             del self.products[code]
         else:
             raise ValueError("Product code not found")

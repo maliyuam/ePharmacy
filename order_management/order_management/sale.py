@@ -39,7 +39,24 @@ class Sale:
         # TODO: Return a string that shows the product sold, its unit price
         # the quantity, timestamp, and the total cost in a nice way.
         return f"{self.name} was sold at {self.price} per unit. {self.quantity} units were sold at {self.timestamp} for a total of {self.purchase_price}."
+    def toJsonData(self):
+        """Returns a JSON object representing a Sale object.
 
+        Args: None
+
+        Returns: A JSON object
+        """
+        return {
+            'id': self.id,
+            'name': self.name,
+            'quantity': self.quantity,
+            'price': self.price,
+            'purchase_price': self.purchase_price,
+            'timestamp': self.timestamp,
+            'customerID': self.customerID,
+            'salesperson': self.salesperson,
+            'prescriptionID': self.prescriptionID
+        }
     @staticmethod
     def fromJsonData(data):
         """Returns a Sale object from a JSON object.

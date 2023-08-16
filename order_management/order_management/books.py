@@ -72,7 +72,7 @@ class BookRecords:
                 if (len(extractedPrescriptions) == 0):
                     return "No prescriptions have been processed yet."
                 else:
-                    formatted = f"|{'Prescription ID':<20}{'Total Price':<20}|\n"
+                    formatted = f"|{'Prescription ID':^20} | {'Total Price':^20}|\n"
                     for prescription in extractedPrescriptions:
                         total = 0
                         for medication in prescription.medications:
@@ -80,10 +80,8 @@ class BookRecords:
                             product = Product.getProductByID(medicationId)
                             if (product != None):
                                 total += product.price
-                            else:
-                                formatted += f"|{prescription.id:<20}{total:<20}|\n"
+                        formatted += f"| {prescription.id:^20} | {total:^20} |\n"
                     return formatted
-                    print(formatted)
 
     def purchasesByUser(self, customerID: str):
         """Reports on the sales performed by a customer.

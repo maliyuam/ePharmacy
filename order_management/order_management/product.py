@@ -45,8 +45,20 @@ class Product:
 
         Returns: A JSON string.
         """
-        json_str = json.dumps(self.__dict__)
-        return json_str
+        return {
+            'code': self.code,
+            'name': self.name,
+            'brand': self.brand,
+            'description': self.description,
+            'quantity': self.quantity,
+            'price': self.price,
+            'dosage_instruction': self.dosage_instruction,
+            'requires_prescription': self.requires_prescription,
+            'category': self.category
+            
+        }
+       
+   
 
     @staticmethod
     def getProductByID(id: str) :

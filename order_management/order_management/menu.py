@@ -25,6 +25,7 @@ class Menu:
         self.prescriptions_file = prescriptions_file
         self.stock_file = stock_file
         self.wrapper = wrapper
+        self.analytic = None
 
     # TODO: Create all the necessary functions/method to create and manage the menu using the
     # available variables and all the attributes of the class
@@ -60,28 +61,40 @@ class Menu:
                     print(MSG_WRONG_INPUT)
 
     def handle_analytics(self) -> None:
-        print("*******************************************")
-        print("Order Management and Analytics Menu")
-        print("[loc:.analytics]")
-        print("*******************************************")
-        print("1. Total income from purchases")
-        print("2. Prescription statistics")
-        print("3. Purchases for a user")
-        print("4. Sales by an agent")
-        print("5. Top sales")
-        choice = int(input("Enter your choice: "))
-        os.system("cls")
-        match choice:
-            case 1:
-                self.handle_total_income()
-            case 2:
-                sld.handle_prescription_stats()
-            case 3:
-                self.handle_user_purchases()
-            case 4:
-                self.handle_agent_sales()
-            case 5:
-                self.handle_top_sales()
+        try:
+            self.analytic = BookRecords.load(self.records_file)
+            # records = BookRecords(self.records_file)
+            while True:
+                print("*******************************************")
+                print("Order Management and Analytics Menu")
+                print("[loc:.analytics]")
+                print("*******************************************")
+                print("1. Total income from purchases")
+                print("2. Prescription statistics")
+                print("3. Purchases for a user")
+                print("4. Sales by an agent")
+                print("5. Top sales")
+                print("6. Back")
+                choice = int(input("Enter your choice: "))
+                os.system("cls")
+                match choice:
+                    case 1:
+                        self.handle_total_income()
+                    case 2:
+                        sld.handle_prescription_stats()
+                    case 3:
+                        self.handle_user_purchases()
+                    case 4:
+                        self.handle_agent_sales()
+                    case 5:
+                        self.handle_top_sales()
+                    case 6:
+                        os.system("cls")
+                        break
+                    case defaut:
+                        print(MSG_WRONG_INPUT)
+        except Exception as e:
+            print(e)
 
     def handle_add_to_cart(self) -> None:
         print("*******************************************")
@@ -97,6 +110,10 @@ class Menu:
 
         choice = int(input("Enter your choice: "))
         quantity = int(input("Enter quantity: "))
+        if choice < 1 or choice > len(self.stock.products):
+            os.system("cls")
+            print("Wrong choice...")
+            return
         if quantity > self.stock.products[choice-1].quantity:
             print("Insufficient stock")
             os.system("cls")
@@ -111,6 +128,9 @@ class Menu:
             print(e)
 
     def handle_remove_from_cart(self) -> None:
+        if len(self.cart.products) == 0:
+            print("Cart is empty...")
+            return
         print("*******************************************")
         print("Order Management and Analytics Menu")
         print("[loc:.order.removeFromCart]")
@@ -158,19 +178,22 @@ class Menu:
         print("Order Management and Analytics Menu")
         print("[loc:.order.checkout]")
         print("*******************************************")
-        # will display the users
+        if len(self.cart.products) == 0:
+            print("Cart is empty...")
+            return
         print(
-            f"|{'ID':^5} | {'Username':^20} | {'Full Name':^20} | {'Role':^20} | {'Logged in':^20}|")
-        print("-"*120)
+            f"|{'ID':^10} | {'Username':^20} | {'Full Name':^20} | {'Role':^20} | {'Logged in':^20}|")
+        print("-"*110)
         for i, user in enumerate(self.profiles.users):
-            print(user.__str__())
-            print("-"*120)
+            print(f'| {i+1:^9} | {user.__str__()}|')
+            print("-"*110)
         try:
 
-            choice = int(input("Enter the corresponding user ID: "))
+            choice = int(input("Enter the corresponding user : "))
             user = self.profiles.users[choice-1]
             prescription = Prescription.get(
                 infile=self.prescriptions_file, id=user.username)
+            
             self.wrapper.checkout(self.cart, user.username, prescription)
             self.cart.clear()
             os.system("cls")
@@ -183,8 +206,68 @@ class Menu:
         print("Order Management and Analytics Menu")
         print("[loc:.analytics.totalIncome]")
         print("*******************************************")
-        print("Total income:", self.records_file)
+        print("Total income:", self.analytic.totaoTransactions())
 
+    def handle_prescription_stats(self) -> None:
+        print("*******************************************")
+        print("Order Management and Analytics Menu")
+        print("[loc:.analytics.prescriptionStats]")
+        print("*******************************************")
+        print("Prescription statistics:", self.analytic.prescriptionStats())
+
+    def handle_user_purchases(self) -> None:
+        print("*******************************************")
+        print("Order Management and Analytics Menu")
+        print("[loc:.analytics.userPurchases]")
+        print("*******************************************")
+        print(
+            f"|{'ID':^5} | {'Username':^20} | {'Full Name':^20} | {'Role':^20} | {'Logged in':^20}|")
+        print("-"*120)
+        for i, user in enumerate(self.profiles.users):
+            print(user.__str__())
+            print("-"*120)
+        try:
+
+            choice = int(input("Enter the corresponding user ID: "))
+            user = self.profiles.users[choice-1]
+            print("Purchases for user:", user.username)
+            print("-"*120)
+            self.analytic.purchasesByUser(user.username)
+            self.cart.clear()
+            os.system("cls")
+            print("Checkout successful...")
+        except Exception as e:
+            print(e)
+
+    def handle_agent_sales(self):
+        print("*******************************************")
+        print("Order Management and Analytics Menu")
+        print("[loc:.analytics.agentSales]")
+        print("*******************************************")
+        print(
+            f"|{'ID':^5} | {'Username':^20} | {'Full Name':^20} | {'Role':^20} | {'Logged in':^20}|")
+        print("-"*120)
+        for i, user in enumerate(self.profiles.users):
+            print(user.__str__())
+            print("-"*120)
+        try:
+            choice = int(input("Enter the corresponding user ID: "))
+            user = self.profiles.users[choice-1]
+            if user.role != "salesperson":
+                print("User is not a salesperson or a pharmacist")
+                return
+            print("Sales by agent:", user.username)
+            self.analytic.salesByAgent(user.username)
+        except Exception as e:
+            print(e)
+
+    def handle_top_sales(self):
+        print("*******************************************")
+        print("Order Management and Analytics Menu")
+        print("[loc:.analytics.topSales]")
+        print("*******************************************")
+        print("Top sales:")
+        self.analytic.topSales()
     # Your menu should have two main options with suboptions. Such as
     """
     1. Order management
