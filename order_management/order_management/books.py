@@ -7,6 +7,7 @@ import os
 from typing import List
 from .sale import Sale
 from .prescription import Prescription
+from .product import Product
 
 
 class BookRecords:
@@ -35,9 +36,61 @@ class BookRecords:
         # TODO: In the format below, return a representation of the records
         # |      # | Date                | Customer   | Medication | Quantity | Purchase Price | Prescription |
         # |      1 | 2023-06-03 21:23:25 | doe        | Quinine    |        3 |       1400 RWF | PHA1         |
-        formatted = f"|{'Date':^20} | {'Customer':^20} | {'Medication':^20} | {'Quantity':^20} | {'Purchase Price':^20}{'Prescription':^20}|\n"
+
+        if (len(self.transactions) == 0):
+            return "No purchases have been made yet."
+        formatted = "-"*160 + "\n"
+        formatted += f"|{'ID':^20} | {'Date':^20} | {'Customer':^20} | {'Medication':^20} | {'Quantity':^20} | {'Purchase Price':^20} | {'Prescription':^20}|\n"
+        formatted += "-"*160 + "\n"
         for i, transaction in enumerate(self.transactions):
-            formatted += f"|{i:<10}{transaction.date:<10}{transaction.customer:<10}{transaction.medication:<10}{transaction.quantity:<10}{transaction.purchase_price:<10}{transaction.prescriptionID:<10}|\n"
+            # date = datetime.fromtimestamp(transaction.timestamp)
+            date_str = datetime.fromtimestamp(
+                transaction.timestamp).strftime('%Y-%m-%d')
+            prescription_id = transaction.prescriptionID if transaction.prescriptionID != "" else "Not Available"
+            formatted += f"|{i:^20} | {date_str:^20} | {transaction.customerID:^20} | {transaction.name:^20} | {transaction.quantity:^20} | {transaction.purchase_price:^20} | {prescription_id:^20}|\n"
+            formatted += "_"*160 + "\n"
+            return formatted
+
+    def agent_format(self, data) -> str:
+        """Returns a string representation of a record.
+
+        Args:
+
+        Returns: A string
+        """
+        if (len(data) == 0):
+            return "No sales have been made yet."
+        formatted = "-"*160 + "\n"
+        formatted += f"|{'ID':^20} | {'Date':^20} | {'Agent':^20} | {'Medication':^20} | {'Quantity':^20} | {'Purchase Price':^20} | {'Prescription':^20}|\n"
+        formatted += "-"*160 + "\n"
+        for i, transaction in enumerate(data):
+            # date = datetime.fromtimestamp(transaction.timestamp)
+            date_str = datetime.fromtimestamp(
+                transaction.timestamp).strftime('%Y-%m-%d')
+            prescription_id = transaction.prescriptionID if transaction.prescriptionID != "" else "Not Available"
+            formatted += f"|{i:^20} | {date_str:^20} | {transaction.salesperson:^20} | {transaction.name:^20} | {transaction.quantity:^20} | {transaction.purchase_price:^20} | {prescription_id:^20}|\n"
+            formatted += "_"*160 + "\n"
+            return formatted
+
+    def top_prd_format(self, data) -> str:
+        """Returns a string representation of a record.
+
+        Args:
+
+        Returns: A string
+        """
+        if (len(data) == 0):
+            return "No sales have been made yet."
+        formatted = "-"*183 + "\n"
+        formatted += f"|{'ID':^20} | {'Date':^20} | {'Customer':^20} | {'Agent':^20} | {'Medication':^20} | {'Quantity':^20} | {'Purchase Price':^20} | {'Prescription':^20}|\n"
+        formatted += "-"*183 + "\n"
+        for i, transaction in enumerate(data):
+            # date = datetime.fromtimestamp(transaction.timestamp)
+            date_str = datetime.fromtimestamp(
+                transaction.timestamp).strftime('%Y-%m-%d')
+            prescription_id = transaction.prescriptionID if transaction.prescriptionID != "" else "Not Available"
+            formatted += f"|{i:^20} | {date_str:^20} | {transaction.customerID:^20} | {transaction.salesperson:^20} | {transaction.name:^20} | {transaction.quantity:^20} | {transaction.purchase_price:^20} | {prescription_id:^20}|\n"
+            formatted += "_"*183 + "\n"
         return formatted
 
     def reportOnPrescriptions(self) -> str:
@@ -67,20 +120,24 @@ class BookRecords:
             else:
                 extractedPrescriptions = []
                 for prescription in prescriptions:
-                    if (prescription.id in prescriptionIds):
+                    if (prescription.PrescriptionID in prescriptionIds):
                         extractedPrescriptions.append(prescription)
                 if (len(extractedPrescriptions) == 0):
                     return "No prescriptions have been processed yet."
                 else:
-                    formatted = f"|{'Prescription ID':^20} | {'Total Price':^20}|\n"
+                    formatted = "-"*45 + "\n"
+                    formatted += f"|{'Prescription ID':^20} | {'Total Price':^20}|\n"
+                    formatted += "-"*45 + "\n"
+
                     for prescription in extractedPrescriptions:
                         total = 0
-                        for medication in prescription.medications:
+                        for medication in prescription.Medications:
                             medicationId = medication['id']
                             product = Product.getProductByID(medicationId)
                             if (product != None):
                                 total += product.price
-                        formatted += f"| {prescription.id:^20} | {total:^20} |\n"
+                        formatted += f"|{prescription.PrescriptionID:^20} | {total:^15} RWF |\n"
+                        formatted += "_"*45 + "\n"
                     return formatted
 
     def purchasesByUser(self, customerID: str):
@@ -98,7 +155,7 @@ class BookRecords:
         formattedData = []
         transactions = []
         for transaction in self.transactions:
-            if (transaction.customer == customerID):
+            if (transaction.customerID == customerID):
                 transactions.append(transaction)
         return BookRecords(transactions).__str__()
 
@@ -118,7 +175,7 @@ class BookRecords:
         for transaction in self.transactions:
             if (transaction.salesperson == salesperson):
                 transactions.append(transaction)
-        return BookRecords(transactions).__str__()
+        return self.agent_format(transactions)
 
     def topNSales(self, start: datetime = datetime.strptime('1970-01-02', '%Y-%m-%d'), end: datetime = datetime.now(), n=10) -> str:
         """Return the top n sales ordered by the total price of purchases.
@@ -132,17 +189,23 @@ class BookRecords:
         A string representation of the top n 
         """
         # TODO: Query the top transactions and save them to the variable `transactions` below
-        transactions = None
-        formattedData = []
+        # print(start)
+        # print(end)
+        # transactions = None
+        # formattedData = []
         transactions = []
-        for transaction in self.transactions:
-            if (transaction.date >= start and transaction.date <= end):
-                transactions.append(transaction)
-        transactions = sorted(transactions, key=lambda x: x.purchase_price)
-        transactions = transactions[:n]
 
+        for transaction in self.transactions:
+            time_data = datetime.fromtimestamp(transaction.timestamp)
+            if start < time_data and end > time_data:
+                transactions.append(transaction)
+    
+        sortedTransactions = sorted(
+            transactions, key=lambda x: x.purchase_price,reverse=True)
+        # print(len(transactions))
         # return the string representation of the transactions.
-        return BookRecords(transactions).__str__()
+        formatted  = sortedTransactions[:n]
+        return self.top_prd_format(formatted)
 
     def totalTransactions(self) -> float:
         """Returns the total cost of the transactions considered.

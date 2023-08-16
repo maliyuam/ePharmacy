@@ -79,7 +79,7 @@ class Stock:
         """Returns a string representation of the stock
         """
         # TODO: Return the description of the stock with a nice output showing the ID, Name, Brand, Description, Quantity, Price, and the requires_prescription field
-        formatted = f"{'ID':<10}{'Name':<20}{'Brand':<20}{'Description':<20}{'Quantity':<10}{'Price':<10}{'Requires Prescription':<10}\n"
+        formatted = f"|{'ID':^10} | {'Name':^20} | {'Brand':^20} | {'Description':^20} | {'Quantity':^10} | {'Price':^10} | {'Requires Prescription':^10}\n |"
         for product in self.products:
             formatted += f"{product.code:<10}{product.name:<20}{product.brand:<20}{product.description:<20}{product.quantity:<10}{product.price:<10}{product.requires_prescription:<10}\n"
         return formatted

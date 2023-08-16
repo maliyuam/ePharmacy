@@ -81,7 +81,7 @@ class Menu:
                     case 1:
                         self.handle_total_income()
                     case 2:
-                        sld.handle_prescription_stats()
+                        self.handle_prescription_stats()
                     case 3:
                         self.handle_user_purchases()
                     case 4:
@@ -193,7 +193,7 @@ class Menu:
             user = self.profiles.users[choice-1]
             prescription = Prescription.get(
                 infile=self.prescriptions_file, id=user.username)
-            
+
             self.wrapper.checkout(self.cart, user.username, prescription)
             self.cart.clear()
             os.system("cls")
@@ -206,14 +206,16 @@ class Menu:
         print("Order Management and Analytics Menu")
         print("[loc:.analytics.totalIncome]")
         print("*******************************************")
-        print("Total income:", self.analytic.totaoTransactions())
+        print("Total income:", self.analytic.totalTransactions(), "RWF")
+        print("\n\n")
 
     def handle_prescription_stats(self) -> None:
         print("*******************************************")
         print("Order Management and Analytics Menu")
         print("[loc:.analytics.prescriptionStats]")
+        print("PRSCRIPTION STATISTICS")
         print("*******************************************")
-        print("Prescription statistics:", self.analytic.prescriptionStats())
+        print(self.analytic.reportOnPrescriptions())
 
     def handle_user_purchases(self) -> None:
         print("*******************************************")
@@ -221,21 +223,20 @@ class Menu:
         print("[loc:.analytics.userPurchases]")
         print("*******************************************")
         print(
-            f"|{'ID':^5} | {'Username':^20} | {'Full Name':^20} | {'Role':^20} | {'Logged in':^20}|")
-        print("-"*120)
+            f"|{'ID':^10} | {'Username':^20} | {'Full Name':^20} | {'Role':^20} | {'Logged in':^20}|")
+        print("-"*110)
         for i, user in enumerate(self.profiles.users):
-            print(user.__str__())
-            print("-"*120)
-        try:
+            print(f'| {i+1:^9} | {user.__str__()}|')
+            print("-"*110)
 
+        try:
             choice = int(input("Enter the corresponding user ID: "))
             user = self.profiles.users[choice-1]
+            os.system('cls')
             print("Purchases for user:", user.username)
-            print("-"*120)
-            self.analytic.purchasesByUser(user.username)
-            self.cart.clear()
-            os.system("cls")
-            print("Checkout successful...")
+            print("-"*160)
+
+            print(self.analytic.purchasesByUser(user.username))
         except Exception as e:
             print(e)
 
@@ -244,20 +245,22 @@ class Menu:
         print("Order Management and Analytics Menu")
         print("[loc:.analytics.agentSales]")
         print("*******************************************")
+        print("-"*105)
         print(
-            f"|{'ID':^5} | {'Username':^20} | {'Full Name':^20} | {'Role':^20} | {'Logged in':^20}|")
-        print("-"*120)
+            f"|{'ID':^10} | {'Username':^20} | {'Full Name':^20} | {'Role':^20} | {'Logged in':^20}|")
+        print("-"*105)
         for i, user in enumerate(self.profiles.users):
-            print(user.__str__())
-            print("-"*120)
+            print(f'| {i+1:^9} | {user.__str__()}|')
+            print("_"*105)
         try:
             choice = int(input("Enter the corresponding user ID: "))
             user = self.profiles.users[choice-1]
-            if user.role != "salesperson":
+            if user.role.strip() != 'salesperson' and user.role.strip() != 'pharmacist':
                 print("User is not a salesperson or a pharmacist")
                 return
+            os.system('cls')
             print("Sales by agent:", user.username)
-            self.analytic.salesByAgent(user.username)
+            print(self.analytic.salesByAgent(user.username))
         except Exception as e:
             print(e)
 
@@ -267,7 +270,10 @@ class Menu:
         print("[loc:.analytics.topSales]")
         print("*******************************************")
         print("Top sales:")
-        self.analytic.topSales()
+        try:
+            print(self.analytic.topNSales())
+        except Exception as e:
+            print(e)
     # Your menu should have two main options with suboptions. Such as
     """
     1. Order management

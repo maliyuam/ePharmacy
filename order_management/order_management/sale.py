@@ -1,4 +1,5 @@
 import uuid
+import datetime
 
 
 class Sale:
@@ -39,6 +40,7 @@ class Sale:
         # TODO: Return a string that shows the product sold, its unit price
         # the quantity, timestamp, and the total cost in a nice way.
         return f"{self.name} was sold at {self.price} per unit. {self.quantity} units were sold at {self.timestamp} for a total of {self.purchase_price}."
+
     def toJsonData(self):
         """Returns a JSON object representing a Sale object.
 
@@ -57,6 +59,7 @@ class Sale:
             'salesperson': self.salesperson,
             'prescriptionID': self.prescriptionID
         }
+
     @staticmethod
     def fromJsonData(data):
         """Returns a Sale object from a JSON object.

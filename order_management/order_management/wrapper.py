@@ -73,7 +73,7 @@ class Wrapper:
 
         for i, product in enumerate(products):
             salesData.append(Sale.create(product.name, cart.products[product.code], product.price, product.price * cart.products[product.code],
-                             datetime.now().strftime("%d/%m/%Y %H:%M:%S"), customerID, self.agentID, prescription.PrescriptionID if prescription != None else ""))
+                             datetime.now().timestamp(), customerID, self.agentID, prescription.PrescriptionID if prescription != None else ""))
         updated_products = []
         for item in cart.stock.products:
             if item.code in keys:
@@ -96,6 +96,7 @@ class Wrapper:
             for i, product in enumerate(prescription.Medications):
                 prescription.Medications[i]["ProcessedStatus"] = True
             self.dump(self.prescription_file, prescription)
+        cart.clear()
 
     def dump(self, outfile: str, prescription: Prescription = None):
         """Dumps the current sales data to a file

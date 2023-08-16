@@ -8,7 +8,7 @@
         "timestamp": 1690716364.910396,
         "customerID": "CST1",
         "salesperson": "AGT1",
-        "prescriptionID": null
+        "prescriptionID": ""
     },
     {
         "id": "SLS2",
@@ -19,7 +19,7 @@
         "timestamp": 1690753122.462969,
         "customerID": "John",
         "salesperson": "AGT1",
-        "prescriptionID": null
+        "prescriptionID": ""
     },
     {
         "id": "SLS3",
@@ -60,7 +60,7 @@
         "quantity": 5,
         "price": 1490.900024,
         "purchase_price": 7454.500120000001,
-        "timestamp": "16/08/2023 15:47:17",
+        "timestamp": 1690753802.752056,
         "customerID": "test",
         "salesperson": "banki",
         "prescriptionID": ""
@@ -71,7 +71,7 @@
         "quantity": 4,
         "price": 1490.900024,
         "purchase_price": 5963.600096,
-        "timestamp": "16/08/2023 15:49:58",
+        "timestamp": 1690753802.752056,
         "customerID": "test",
         "salesperson": "banki",
         "prescriptionID": ""
