@@ -4,7 +4,6 @@ import os
 
 class Product:
     """Class representing a medication / product in the project.
-
     Attributes:
         code: unique identifier of the product (string)
         name: name of the product (string)
@@ -14,7 +13,6 @@ class Product:
         price: unit price of the project (float)
         dosage_instruction: instructions to take the medicine (string, optional)
         requires_prescription: whether the medication requires a prescription (bool)
-
     """
 
     def __init__(
@@ -55,7 +53,7 @@ class Product:
             'dosage_instruction': self.dosage_instruction,
             'requires_prescription': self.requires_prescription,
             'category': self.category
-            
+
         }
        
    
