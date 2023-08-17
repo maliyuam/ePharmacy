@@ -43,7 +43,7 @@ class Menu:
             print("4. Checkout")
             print("5. Back")
             choice = int(input("Enter your choice: "))
-            os.system("cls")
+            os.system("clear")
 
             match choice:
                 case 1:
@@ -55,7 +55,7 @@ class Menu:
                 case 4:
                     self.handle_checkout()
                 case 5:
-                    os.system("cls")
+                    os.system("clear")
                     break
                 case defaut:
                     print(MSG_WRONG_INPUT)
@@ -76,7 +76,7 @@ class Menu:
                 print("5. Top sales")
                 print("6. Back")
                 choice = int(input("Enter your choice: "))
-                os.system("cls")
+                os.system("clear")
                 match choice:
                     case 1:
                         self.handle_total_income()
@@ -89,7 +89,7 @@ class Menu:
                     case 5:
                         self.handle_top_sales()
                     case 6:
-                        os.system("cls")
+                        os.system("clear")
                         break
                     case defaut:
                         print(MSG_WRONG_INPUT)
@@ -111,17 +111,17 @@ class Menu:
         choice = int(input("Enter your choice: "))
         quantity = int(input("Enter quantity: "))
         if choice < 1 or choice > len(self.stock.products):
-            os.system("cls")
+            os.system("clear")
             print("Wrong choice...")
             return
         if quantity > self.stock.products[choice-1].quantity:
             print("Insufficient stock")
-            os.system("cls")
+            os.system("clear")
             return
         try:
             self.cart.add(self.stock.products[choice-1].code, quantity)
             print("Added to cart...")
-            os.system("cls")
+            os.system("clear")
         except Exception as e:
             print(e)
         except ValueError as e:
@@ -141,7 +141,7 @@ class Menu:
         choice = str(input("Enter the corresponding product code: "))
         try:
             self.cart.remove(choice)
-            os.system("cls")
+            os.system("clear")
             print("Removed from cart...")
             print("Cart Content:", self.cart)
         except Exception as e:
@@ -162,15 +162,15 @@ class Menu:
         if choice == 1:
             self.cart.clear()
             print("Cart cleared...")
-            os.system("cls")
+            os.system("clear")
         elif choice == 2:
-            os.system("cls")
+            os.system("clear")
             return
         elif choice == 3:
-            os.system("cls")
+            os.system("clear")
             return
         else:
-            os.system("cls")
+            os.system("clear")
             print(MSG_WRONG_INPUT)
 
     def handle_checkout(self) -> None:
@@ -196,7 +196,7 @@ class Menu:
 
             self.wrapper.checkout(self.cart, user.username, prescription)
             self.cart.clear()
-            os.system("cls")
+            os.system("clear")
             print("Checkout successful...")
         except Exception as e:
             print(e)
@@ -232,7 +232,7 @@ class Menu:
         try:
             choice = int(input("Enter the corresponding user ID: "))
             user = self.profiles.users[choice-1]
-            os.system('cls')
+            os.system("clear")
             print("Purchases for user:", user.username)
             print("-"*160)
 
@@ -258,7 +258,7 @@ class Menu:
             if user.role.strip() != 'salesperson' and user.role.strip() != 'pharmacist':
                 print("User is not a salesperson or a pharmacist")
                 return
-            os.system('cls')
+            os.system("clear")
             print("Sales by agent:", user.username)
             print(self.analytic.salesByAgent(user.username))
         except Exception as e:

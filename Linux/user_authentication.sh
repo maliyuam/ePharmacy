@@ -102,41 +102,49 @@ verify_credentials() {
         echo "The status $createPassword"
         if [[ "$createPassword" == "1" ]]; then
             # request user to change password
-            echo "Please change your password"
-            read -sp "Enter password: " nPass
-            echo -e "\n"
-            read -sp "Confirm password: " nConf
-            if [[ "$nPass" != "$nConf" ]]; then
-                echo "Password do not match. Please try again"
-                return
-            else
-                local newpass=$(hash_password "$nPass")
-                local hashed_passed=$(echo "$newpass" | cut -d ':' -f 1)
-                local salt=$(echo "$newpass" | cut -d ':' -f 2)
-                local liner=$(grep "^$user:" "$credentials_file")
-                updated_liner=$(echo "$liner" | awk 'BEGIN{FS=OFS=":"} {$2="'${hashed_passed}'"; print}')
-                updated_liner=$(echo "$updated_liner" | awk 'BEGIN{FS=OFS=":"} {$3="'${salt}'"; print}')
-                updated_liner=$(echo "$updated_liner" | awk 'BEGIN{FS=OFS=":"} {$6="1"; print}')
-                updated_liner=$(echo "$updated_liner" | awk 'BEGIN{FS=OFS=":"} {$7="0"; print}')
-                sed -i "s~$liner~$updated_liner~" "$credentials_file"
-                echo "$user" >"$login_data_file"
-                echo "Password changed successfully"
-                local role=$(echo "$stored_cred" | cut -d ':' -f 4)
-                if [[ "$role" == "admin" ]]; then
-                    echo "$line"
-                    admin_menu "$line"
-                elif [[ "$role" == "customer" ]]; then
-                    echo "Calling Customer menu"
-                    customer_menu "$line"
-                elif [[ "$role" == "pharmacist" ]]; then
-                    echo "Calling Parmasist menu"
-                    pharmasist_menu "$line"
+            if [[ "$stored_pass" == "$hashed_pass" ]]; then
+                echo "Please change your password"
+                read -sp "Enter password: " nPass
+                echo -e "\n"
+                read -sp "Confirm password: " nConf
+                if [[ "$nPass" != "$nConf" ]]; then
+                    echo "Password do not match. Please try again"
+                    return
                 else
-                    echo "The role is not defined. Exiting the application...."
-                    logout_user
-                    exit 0
-                fi
+                    local newpass=$(hash_password "$nPass")
+                    local hashed_passed=$(echo "$newpass" | cut -d ':' -f 1)
+                    local salt=$(echo "$newpass" | cut -d ':' -f 2)
+                    local liner=$(grep "^$user:" "$credentials_file")
+                    updated_liner=$(echo "$liner" | awk 'BEGIN{FS=OFS=":"} {$2="'${hashed_passed}'"; print}')
+                    updated_liner=$(echo "$updated_liner" | awk 'BEGIN{FS=OFS=":"} {$3="'${salt}'"; print}')
+                    updated_liner=$(echo "$updated_liner" | awk 'BEGIN{FS=OFS=":"} {$6="1"; print}')
+                    updated_liner=$(echo "$updated_liner" | awk 'BEGIN{FS=OFS=":"} {$7="0"; print}')
+                    sed -i "s~$liner~$updated_liner~" "$credentials_file"
+                    echo "$user" >"$login_data_file"
+                    echo "Password changed successfully"
+                    local role=$(echo "$stored_cred" | cut -d ':' -f 4)
+                    if [[ "$role" == "admin" ]]; then
+                        echo "$line"
+                        admin_menu "$line"
+                    elif [[ "$role" == "customer" ]]; then
+                        echo "Calling Customer menu"
+                        customer_menu "$line"
+                    elif [[ "$role" == "pharmacist" ]]; then
+                        echo "Calling Parmasist menu"
+                        clear
+                        python3 ../order_management/__main__.py
+                        logout_user
 
+                    else
+                        echo "The role is not defined. Exiting the application...."
+                        logout_user
+                        exit 0
+                    fi
+
+                fi
+            else
+                echo "The does not mact the admin Password"
+                return 0
             fi
 
         else
@@ -154,10 +162,12 @@ verify_credentials() {
                     admin_menu "$line"
                 elif [[ "$role" == "customer" ]]; then
                     echo "Calling Customer menu"
-                    customer_menu "$line"
+
                 elif [[ "$role" == "pharmacist" ]]; then
                     echo "Calling Parmasist menu"
-                    pharmasist_menu "$line"
+                    clear
+                    python3 ../order_management/__main__.py
+                    logout_user
                 else
                     echo "The role is not defined. Exiting the application...."
                     logout_user
@@ -226,7 +236,6 @@ logout_user() {
     sed -i "s~$line~$updated_line~" "$credentials_file"
     rm -f "$login_data_file"
 
-    exit 0
 }
 
 # Function for the user menu
@@ -285,7 +294,7 @@ display_details() {
 }
 
 # Function for the pharmacist menu
-pharmasist_menu() {
+pharmacist_menu() {
     echo "This is a pharmacist menu..."
     return 0
 }
@@ -293,15 +302,15 @@ pharmasist_menu() {
 function ctrl_c() {
     echo -e "\n Unexpected exit. Exiting the application..."
     logout_user
-    exit 1
+    # exit 1
 }
 function on_exit() {
-    echo -e "\n Script is exiting..."
+    # echo -e "\n Script is exiting..."
     logout_user
 
 }
 trap on_exit EXIT
-trap ctrl_c SIGINT
+# trap ctrl_c SIGINT
 
 # Function to display the main menu
 # this function will need that we
@@ -322,7 +331,6 @@ while true; do
     case $user_choice in
     1)
         get_login_credentials
-
         verify_credentials "$user" "$pass"
         ;;
     2)

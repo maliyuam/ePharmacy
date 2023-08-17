@@ -147,7 +147,7 @@ class Prescription:
             data = json.load(file)
             prescriptions = [p for p in data if p['CustomerID'] == id]
             if len(prescriptions) > 0:
-                return prescriptions[0]
+                return prescriptions[-1]
         return None
 
     # TODO: Return the relevant prescription

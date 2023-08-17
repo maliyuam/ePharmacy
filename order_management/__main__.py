@@ -38,7 +38,7 @@ if __name__ == '__main__':
     books = BookRecords.load(sales_file)
 
     # create an instance of the menu
-    menu = Menu(stock, profiles, pharmacist, sales_file,
+    menu = Menu(stock, profiles, pharmacist , sales_file,
                 prescription_file, stock_file, wrap)
     
 
@@ -49,9 +49,9 @@ if __name__ == '__main__':
         print("*******************************************")
         print("1. Order Management")
         print("2. Get Analytics")
-        print("0. Back")
+        print("0. Logout")
         choice = int(input("Enter your choice: "))
-        os.system('cls')
+        os.system("clear")
         match choice:
             case 1:
                 menu.handle_orders()
@@ -59,7 +59,7 @@ if __name__ == '__main__':
                 menu.handle_analytics()
             case 0:
                 print("Exiting...")
-                exit()
+                break
             case default:
                 print("Invalid choice. Try again.")
                 continue
