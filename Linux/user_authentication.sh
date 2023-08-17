@@ -162,12 +162,11 @@ verify_credentials() {
                     admin_menu "$line"
                 elif [[ "$role" == "customer" ]]; then
                     echo "Calling Customer menu"
+                    customer_menu "$line"
 
                 elif [[ "$role" == "pharmacist" ]]; then
                     echo "Calling Parmasist menu"
-                    clear
-                    python3 ../order_management/__main__.py
-                    logout_user
+                    pharmacist_menu
                 else
                     echo "The role is not defined. Exiting the application...."
                     logout_user
@@ -189,41 +188,50 @@ verify_credentials() {
 
 # Function for the admin menu
 admin_menu() {
-    echo "This is Admin menu..."
-    echo "1. Display Details"
-    echo "2. Create User"
-    read -p "Enter your choice: " choice
-    case $choice in
-    1)
-        echo "Displaying Your details"
-        display_details "$1"
-        ;;
-    2)
-        echo "What type of user you want to create"
-        echo "1. Customer"
-        echo "2. Pharmasist"
-        read -p "Enter your choice: " role
-        case $role in
+    while true; do
+        echo "This is Admin menu..."
+        echo "1. Display Details"
+        echo "2. Create User"
+        echo "3. Product Operations"
+
+        read -p "Enter your choice: " choice
+        case $choice in
         1)
-            echo "Creating a customer"
-            register_credentials "customer"
+            echo "Displaying Your details"
+            display_details "$1"
             ;;
         2)
-            echo "Creating a Pharmasist"
-            register_credentials "pharmacist"
+            echo "What type of user you want to create"
+            echo "1. Customer"
+            echo "2. Pharmasist"
+            read -p "Enter your choice: " role
+            case $role in
+            1)
+                echo "Creating a customer"
+                register_credentials "customer"
+                ;;
+            2)
+                echo "Creating a Pharmasist"
+                register_credentials "pharmacist"
+                ;;
+
+            *)
+                echo "Invalid choice. Please try again."
+                ;;
+            esac
+
             ;;
+        3)
+            # echo "Product Management"
+            echo "Please waitt..."
+            g++ -Wall -g -c ../Product_Catalog/ProductManager.cpp -o ../Product_Catalog/bin/productmanager.o && g++ -o productmanager ../Product_Catalog/bin/productmanager.o && ./productmanager
+            ;;
+
         *)
             echo "Invalid choice. Please try again."
             ;;
         esac
-
-        ;;
-
-    *)
-        echo "Invalid choice. Please try again."
-        ;;
-    esac
-
+    done
     return 0
 
 }
@@ -240,35 +248,11 @@ logout_user() {
 
 # Function for the user menu
 customer_menu() {
-    echo "This is a customer menu..."
-    echo "1. Display all products"
-    echo "2. Search for a product"
-    echo "3. Add a product to cart"
-    echo "4. Remove a product from cart"
-    echo "5. Display cart"
-    echo "6. Checkout"
-    echo "7. Display Details"
+    echo "This is Customer menu..."
+    echo "1. Display Details"
     read -p "Enter your choice: " choice
     case $choice in
     1)
-        echo "Displaying all products..."
-        ;;
-    2)
-        echo "Searching for a product..."
-        ;;
-    3)
-        echo "Adding a product to cart..."
-        ;;
-    4)
-        echo "Removing a product from cart..."
-        ;;
-    5)
-        echo "Displaying cart..."
-        ;;
-    6)
-        echo "Checking out..."
-        ;;
-    7)
         display_details "$1"
         ;;
     *)
@@ -295,8 +279,52 @@ display_details() {
 
 # Function for the pharmacist menu
 pharmacist_menu() {
-    echo "This is a pharmacist menu..."
-    return 0
+    while true; do
+        echo "***********************************************"
+        echo "This is the Pharmacist Menu"
+        echo "***********************************************"
+        echo "1. Prescription Management"
+        echo "2. Order Management/Analytics"
+        echo "3. Logout"
+
+        read -p "Enter your choice: " choice
+        case $choice in
+        1)
+            clear
+            # echo "Product Management"
+            echo "Please waitt..."
+            # g++ -o productmanager ../Product_Catalog/bin/productmanager.o && ./productmanager
+            CLASSPATH=../bin:../lib/json-simple-1.1.1.jar
+            cd ..
+            cd Prescription_mgmt
+            ls
+            cd Prescription_mgmt/src
+            ls
+            javac -d bin -cp "$CLASSPATH" *.java
+            # cd ..
+            # cd ..
+            # cd ..
+            # cd Linux
+            java -cp "$CLASSPATH" PrescriptionManagement
+            cd ..
+            cd ..
+            cd ..
+            cd Linux
+            ;;
+        2)
+            clear
+            chmod u+x ../order_management/__main__.py
+            python3 ../order_management/__main__.py
+            ;;
+        3)
+            logout_user
+            ;;
+        *)
+            echo "Invalid choice. Please try again."
+            ;;
+        esac
+    done
+
 }
 
 function ctrl_c() {

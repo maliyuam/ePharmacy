@@ -78,7 +78,7 @@ class Prescription:
         if not os.path.exists(self.prescriptionPath):
             raise FileNotFoundError("Prescription file not found")
         with (open(self.prescriptionPath, 'w')) as file:
-            json.dump(data, file)
+            json.dump(data, file,indent=None, separators=(",", "\n"))
     
 
     def dump(self, outfile: str):
@@ -102,7 +102,7 @@ class Prescription:
         if (not os.path.exists(outfile)):
             raise FileNotFoundError("Prescription file not found")
         with (open(outfile, 'w')) as file:
-            json.dump(data, file)
+            json.dump(data, file,indent=None, separators=(",", "\n"))
 
     def toJsonData(self) -> Dict[str, Union[str, List[Dict[str, Union[int, str, bool]]]]]:
         """Converts the prescription object to a dictionary

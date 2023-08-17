@@ -43,7 +43,7 @@ class Stock:
         """Saves the stock to a JSON file"""
         # TODO: Implement the function
         with open(outfile, 'w') as f:
-            json.dump(self.products, f)
+            json.dump(self.products, f,indent=None, separators=(",", "\n"))
 
     @staticmethod
     def load(infile: str):

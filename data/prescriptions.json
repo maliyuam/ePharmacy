@@ -1,1 +1,128 @@
-[{"DoctorName": "Peter", "PrescriptionID": "PHA1", "Medications": [{"quantity": 7, "name": "paracetamol", "id": "R8Ibu4fwETzZk5CUWsHwjfSMiVJV9jQMm", "ProcessedStatus": false}, {"quantity": 5, "name": "Asprin", "id": "MED2", "ProcessedStatus": false}], "CustomerID": "ebra", "Date": "2023-07-28"}]
+[
+    {
+        "DoctorName": "Grace",
+        "PrescriptionID": "PR1",
+        "Medications": [
+            {
+                "quantity": 2,
+                "processedStatus": false,
+                "name": "Ibuprofen",
+                "id": "IB01H"
+            }
+        ],
+        "CustomerID": "Samiratu",
+        "Date": "2023-08-07"
+    },
+    {
+        "DoctorName": "sdsfddfd",
+        "PrescriptionID": "sds",
+        "Medications": [
+            {
+                "quantity": 5,
+                "processedStatus": false,
+                "name": "Test",
+                "id": "jdfdf"
+            }
+        ],
+        "CustomerID": "sdsd",
+        "Date": "2023-08-11"
+    },
+    {
+        "DoctorName": "sds",
+        "PrescriptionID": "sds",
+        "Medications": [
+            {
+                "quantity": 4,
+                "processedStatus": false,
+                "name": "fdf",
+                "id": "erer"
+            }
+        ],
+        "CustomerID": "sdsd",
+        "Date": "2023-08-11"
+    },
+    {
+        "DoctorName": "jj",
+        "PrescriptionID": "1",
+        "Medications": [
+            {
+                "quantity": 4,
+                "processedStatus": false,
+                "name": "sdsd",
+                "id": "sfsdf"
+            }
+        ],
+        "CustomerID": "jj",
+        "Date": "2023-08-17"
+    },
+    {
+        "DoctorName": "assa",
+        "PrescriptionID": "sdsd",
+        "Medications": [
+            {
+                "quantity": 2,
+                "processedStatus": false,
+                "name": "asas",
+                "id": "3232"
+            }
+        ],
+        "CustomerID": "sda",
+        "Date": "2023-08-17"
+    },
+    {
+        "DoctorName": "sds",
+        "PrescriptionID": "1",
+        "Medications": [
+            {
+                "quantity": 1,
+                "processedStatus": false,
+                "name": "sdsd",
+                "id": "ass"
+            }
+        ],
+        "CustomerID": "dssd",
+        "Date": "2023-08-17"
+    },
+    {
+        "DoctorName": "sd",
+        "PrescriptionID": "dsd",
+        "Medications": [
+            {
+                "quantity": 1,
+                "processedStatus": false,
+                "name": "as",
+                "id": "as"
+            }
+        ],
+        "CustomerID": "sd",
+        "Date": "2023-08-17"
+    },
+    {
+        "DoctorName": "ewe",
+        "PrescriptionID": "sd",
+        "Medications": [
+            {
+                "quantity": 1,
+                "processedStatus": false,
+                "name": "wew",
+                "id": "wewe"
+            }
+        ],
+        "CustomerID": "sd",
+        "Date": "2023-08-17"
+    },
+    {
+        "DoctorName": "asd",
+        "PrescriptionID": "dfsdsf",
+        "Medications": [
+            {
+                "quantity": 1,
+                "processedStatus": false,
+                "name": "sd",
+                "id": "ssd"
+            }
+        ],
+        "CustomerID": "ds",
+        "Date": "2023-08-17"
+    }
+]

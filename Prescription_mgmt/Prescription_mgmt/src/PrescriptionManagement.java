@@ -3,6 +3,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -19,7 +21,7 @@ public class PrescriptionManagement {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         int choice, numMedications;
         Prescription prescription = new Prescription();
-        FileHandler fileHandler = new FileHandler();
+        // FileHandler fileHandler = new FileHandler();
 
         while (true) {
             System.out.println("Prescription Management System");
@@ -84,8 +86,9 @@ public class PrescriptionManagement {
                     }
 
                     ArrayList<Medication> medications = new ArrayList<>();
-
-                    displayMedications("Prescription_mgmt/src/products.json");
+                    String projectRoot = System.getProperty("user.dir");
+                    Path rawPrescriptionsPath = Paths.get(projectRoot, "..", "data", "products.json");
+                    displayMedications(rawPrescriptionsPath.toString());
                     for (int i = 1; i <= numMedications; i++) {
                         String medicationName, medicationDetails, dosage, medicationID;
                         int quantity;
@@ -218,19 +221,15 @@ public class PrescriptionManagement {
                 System.out.println(
                         "---------------------------------------------------------------------------------------");
                 System.out.println(
-                        "| Medication ID |  Medication Name   |    Medication Price ||    Medication Quantity |");
+                        "| Medication ID |  Medication Name   |    Medication Price |   Medication Quantity |");
                 System.out.println(
                         "---------------------------------------------------------------------------------------");
 
                 for (Object obj : jsonArray) {
                     JSONObject jsonObject = (JSONObject) obj;
-
-               
-                    System.out.println("|\t" + jsonObject.get("code") + "\t\t" + jsonObject.get("name") + "\t\t"
-                            + jsonObject.get("price") + "\t\t" + jsonObject.get("quantity") + "\t\t"
+                    System.out.println("|   " + jsonObject.get("code") + "  |\t" + jsonObject.get("name") + "  \t|\t"
+                            + jsonObject.get("price") + "   \t|\t\t" + jsonObject.get("quantity") + "\t|\t"
                             + "\t\t\t\t");
-           
-
                 }
                 System.out.println(
                         "---------------------------------------------------------------------------------------");

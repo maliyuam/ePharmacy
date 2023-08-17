@@ -4,15 +4,19 @@
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 public class FileHandler {
-
-    private String filePath = "Prescription_mgmt/src/prescriptions.json";
-    private String productsPath = "Prescription_mgmt/src/products.json";
+    String projectRoot = System.getProperty("user.dir");
+    Path rawPrescriptionsPath = Paths.get(projectRoot, "..", "data", "prescriptions.json");
+    Path rawProductsPath = Paths.get(projectRoot, "..", "data", "products.json");
+    private String filePath = rawPrescriptionsPath.toString();
+    private String productsPath = rawProductsPath.toString();
 
     public JSONArray readJSONArrayFromFile(Boolean def) throws IOException, ParseException {
         JSONParser parser = new JSONParser();

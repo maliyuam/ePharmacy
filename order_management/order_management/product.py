@@ -51,7 +51,7 @@ class Product:
             'quantity': self.quantity,
             'price': self.price,
             'dosage_instruction': self.dosage_instruction,
-            'requires_prescription': self.requires_prescription,
+            'requires_prescription':1 if self.requires_prescription else 0,
             'category': self.category
 
         }
@@ -75,7 +75,7 @@ class Product:
                                prescription['quantity'],
                                prescription['price'],
                                prescription['dosage_instruction'],
-                               prescription['requires_prescription'],
+                               True if prescription['requires_prescription'] == 1 else False,
                                prescription['category'])
         return None
 

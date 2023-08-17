@@ -6,6 +6,8 @@
 
 // Importing Product class
 #include "Product.cpp"
+#include <filesystem> // Include the filesystem library
+namespace fs = std::filesystem;
 
 using namespace std;
 
@@ -25,19 +27,45 @@ public:
 
         if (filename.empty())
         {
-            filename = "data/products.json";
+            //  std::cout << "Current Directory: " <<  << std::endl;
+            fs::path currentDir = fs::current_path();
+            fs::path parentDir = currentDir.parent_path();
+            std::cout << "Parent Directory: " << parentDir << std::endl;
+            string name = parentDir.string() + "/data/products.json";
+            filename = name.c_str();
+            // printf("File name: %s", filename.c_str());
         }
+
         ifstream prodsFile(filename);
+        if (!prodsFile.is_open())
+        {
+            std::cerr << "Error opening file: " << filename << std::endl;
+            return prodList;
+        }
+        else
+        {
+            cout << "File opened" << endl;
+            // cout<<"FileData: "<<prodsFile<<endl;
+        }
+
+        if (!prodsFile.good())
+        {
+            cerr << "File is empty or unreadable" << endl;
+            return prodList;
+        }
+        else{
+            cout<<"File is readable"<<endl;
+        }
 
         while (getline(prodsFile, prodLine))
         {
-
             prodLines.push_back(prodLine);
 
             if (prodLine.substr(0, 1) == "{")
             {
 
                 manProd.productFromJson(prodLine);
+                cout << manProd << endl;
                 prodList.push_back(manProd);
             }
         }
@@ -77,7 +105,7 @@ public:
     }
     void updateFile(vector<Product> pList)
     {
-         vector<Product> dList;
+        vector<Product> dList;
         dList = readJsonFile();
         // pList.push_back(p);
         int ret = remove(filename.c_str());
@@ -103,5 +131,9 @@ public:
         }
         jsonFile << "]" << endl;
         jsonFile.close();
+    }
+    void setProductFile(string filename)
+    {
+        this->filename = filename;
     }
 };

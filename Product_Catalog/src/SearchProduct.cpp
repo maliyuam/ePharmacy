@@ -24,6 +24,7 @@ public:
     {
         this->searchText = this->to_lowercase(name);
         vector<Product> plist = fHandler.readJsonFile();
+        cout << "plist size: " << plist.size() << endl;
         vector<Product> foundProducts;
         regex pattern(".*" + this->searchText + ".*", std::regex_constants::icase);
         for (Product p : plist)

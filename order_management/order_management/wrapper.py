@@ -120,7 +120,7 @@ class Wrapper:
                     prescriptions.append(prescription)
             with open(outfile, "w") as f:
                 json.dump([prescription.toJsonData()
-                          for prescription in prescriptions], f)
+                          for prescription in prescriptions], f, indent=None, separators=(",", "\n"))
 
         # TODO: Update the content by appending the new entries to it, and save to the file
     def update_sales(self, outfile: str):
@@ -137,7 +137,8 @@ class Wrapper:
             for item in self.sales:
                 sales.append(item)
             with open(outfile, "w") as f:
-                json.dump([sale.toJsonData() for sale in sales], f)
+                json.dump([sale.toJsonData() for sale in sales],
+                          f, indent=None, separators=(",", "\n"))
 
     def handle_quantity_change(self, products: List[Product]):
         """Handles the quantity change of a product
@@ -148,4 +149,4 @@ class Wrapper:
         """
         with open(self.products_file, "w") as f:
             json.dump([product.to_json()
-                      for product in products], f)
+                      for product in products], f, indent=None, separators=(",", "\n"))
